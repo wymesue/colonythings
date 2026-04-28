@@ -33,7 +33,6 @@ body{
   overflow-x:hidden;
 }
 
-/* Background texture */
 body::before{
   content:'';
   position:fixed;
@@ -168,6 +167,7 @@ nav{
   color:#0a0e14;
 }
 .btn-primary:hover{background:#9acfee;transform:translateY(-1px)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .btn-secondary{
   background:transparent;
   border:1px solid var(--border);
@@ -214,17 +214,68 @@ nav{
   color:#0a0e14;
 }
 .btn-gold:hover{background:#d4b870;transform:translateY(-1px)}
-.colony-code-result{
-  margin-top:14px;
-  padding:12px 16px;
+.btn-gold:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* Result box */
+.colony-result{
+  margin-top:16px;
+  display:none;
+}
+.colony-result.show{display:block}
+.result-code-display{
   background:#0a1018;
   border:1px solid var(--green);
   border-radius:8px;
-  font-family:'Cinzel',serif;
-  font-size:15px;
-  color:var(--green);
+  padding:16px;
   text-align:center;
-  display:none;
+  margin-bottom:10px;
+}
+.result-code-label{
+  font-size:12px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-family:'Cinzel',serif;
+  margin-bottom:8px;
+}
+.result-code-value{
+  font-family:'Cinzel',serif;
+  font-size:22px;
+  color:var(--green);
+  letter-spacing:1px;
+  margin-bottom:12px;
+  word-break:break-all;
+}
+.btn-copy{
+  background:transparent;
+  border:1px solid var(--green);
+  color:var(--green);
+  padding:6px 16px;
+  border-radius:6px;
+  font-family:'Cinzel',serif;
+  font-size:12px;
+  letter-spacing:.5px;
+  cursor:pointer;
+  transition:all .2s;
+}
+.btn-copy:hover{background:var(--green);color:#0a0e14}
+.result-warning{
+  font-size:13px;
+  color:var(--amber);
+  text-align:center;
+  line-height:1.5;
+}
+
+/* Load success */
+.load-success{
+  background:#0a1018;
+  border:1px solid var(--green);
+  border-radius:8px;
+  padding:14px 16px;
+  text-align:center;
+  font-family:'Cinzel',serif;
+  font-size:14px;
+  color:var(--green);
 }
 
 /* DIVIDER */
@@ -373,16 +424,35 @@ footer a:hover{color:var(--accent)}
   <div class="colony-code-section">
     <div class="colony-code-label">🏰 Your Colony</div>
     <div class="colony-code-box">
+
+      <!-- Load existing -->
       <div class="colony-code-input-row">
-        <input type="text" class="colony-code-input" id="load-code-input" placeholder="Enter your colony code…" maxlength="30"/>
-        <button class="btn btn-primary" onclick="loadColony()">Load</button>
+        <input type="text" class="colony-code-input" id="load-code-input" placeholder="Enter your colony code…" maxlength="40"/>
+        <button class="btn btn-primary" id="load-btn" onclick="loadColony()">Load</button>
       </div>
+
       <div class="colony-code-or">or start a new colony</div>
+
+      <!-- Create new -->
       <div class="colony-new-row">
         <input type="text" class="colony-name-input" id="new-colony-input" placeholder="Name your colony…" maxlength="24"/>
-        <button class="btn btn-gold" onclick="createColony()">Create</button>
+        <button class="btn btn-gold" id="create-btn" onclick="createColony()">Create</button>
       </div>
-      <div class="colony-code-result" id="colony-result"></div>
+
+      <!-- Results -->
+      <div class="colony-result" id="create-result">
+        <div class="result-code-display">
+          <div class="result-code-label">Your Colony Code</div>
+          <div class="result-code-value" id="result-code-value"></div>
+          <button class="btn-copy" onclick="copyCode()">Copy</button>
+        </div>
+        <div class="result-warning">⚠️ Write this down — it's the only way to access your colony. There are no accounts or password resets.</div>
+      </div>
+
+      <div class="colony-result" id="load-result">
+        <div class="load-success" id="load-success-msg"></div>
+      </div>
+
     </div>
   </div>
 
@@ -450,50 +520,103 @@ footer a:hover{color:var(--accent)}
 
 <div class="notif" id="notif"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-function showNotif(msg, type='success'){
-  const n=document.getElementById('notif');
-  n.textContent=msg;
-  n.className='notif '+type+' show';
-  setTimeout(()=>n.classList.remove('show'),3000);
+const { createClient } = supabase;
+const sb = createClient(
+  'https://lihxhwcrlnvsqpfqtggc.supabase.co',
+  'sb_publishable_OfZ9MzjXjDGime_xNJj7hA_Bi5-EQ8V'
+);
+
+let lastCreatedCode = '';
+
+function showNotif(msg, type='success') {
+  const n = document.getElementById('notif');
+  n.textContent = msg;
+  n.className = 'notif ' + type + ' show';
+  setTimeout(() => n.classList.remove('show'), 3500);
 }
 
-function generateCode(name){
-  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let suffix='';
-  for(let i=0;i<4;i++) suffix+=chars[Math.floor(Math.random()*chars.length)];
-  const clean=name.trim().replace(/[^a-zA-Z0-9]/g,'-').substring(0,20);
-  return clean+'-'+suffix;
+function setLoading(btnId, loading) {
+  const btn = document.getElementById(btnId);
+  btn.disabled = loading;
+  if (btnId === 'create-btn') btn.textContent = loading ? 'Creating…' : 'Create';
+  if (btnId === 'load-btn')   btn.textContent = loading ? 'Loading…'  : 'Load';
 }
 
-function createColony(){
-  const name=document.getElementById('new-colony-input').value.trim();
-  if(!name){ showNotif('Please enter a colony name!','error'); return; }
-  const code=generateCode(name);
-  const result=document.getElementById('colony-result');
-  result.textContent='Your colony code: '+code+' — save this somewhere safe!';
-  result.style.display='block';
-  localStorage.setItem('colonyCode', code);
-  localStorage.setItem('colonyName', name);
-  showNotif('Colony created! Code saved to your browser.','success');
+function generateCode(name) {
+  const clean = name.trim().replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').substring(0, 20);
+  const suffix = Date.now().toString(36);
+  return clean + '-' + suffix;
 }
 
-function loadColony(){
-  const code=document.getElementById('load-code-input').value.trim();
-  if(!code){ showNotif('Please enter a colony code!','error'); return; }
-  localStorage.setItem('colonyCode', code);
-  showNotif('Colony code saved! Head to any tool to load your progress.','success');
-}
+async function createColony() {
+  const name = document.getElementById('new-colony-input').value.trim();
+  if (!name) { showNotif('Please enter a colony name!', 'error'); return; }
 
-// Show saved colony code if exists
-window.addEventListener('load',()=>{
-  const saved=localStorage.getItem('colonyCode');
-  const name=localStorage.getItem('colonyName');
-  if(saved){
-    document.getElementById('load-code-input').value=saved;
-    if(name) document.getElementById('new-colony-input').placeholder=name+'\'s colony';
+  setLoading('create-btn', true);
+
+  const code = generateCode(name);
+  const now = new Date().toISOString();
+
+  const { error } = await sb.from('colony_saves').insert({
+    colony_code: code,
+    colony_name: name,
+    save_data: {},
+    last_accessed: now
+  });
+
+  setLoading('create-btn', false);
+
+  if (error) {
+    console.error(error);
+    showNotif('Something went wrong. Please try again.', 'error');
+    return;
   }
-});
+
+  lastCreatedCode = code;
+  document.getElementById('result-code-value').textContent = code;
+  document.getElementById('load-result').classList.remove('show');
+  document.getElementById('create-result').classList.add('show');
+}
+
+async function loadColony() {
+  const code = document.getElementById('load-code-input').value.trim();
+  if (!code) { showNotif('Please enter a colony code!', 'error'); return; }
+
+  setLoading('load-btn', true);
+
+  const { data, error } = await sb
+    .from('colony_saves')
+    .select('colony_name, last_accessed')
+    .eq('colony_code', code)
+    .single();
+
+  if (error || !data) {
+    setLoading('load-btn', false);
+    showNotif('Colony not found. Check your code and try again.', 'error');
+    return;
+  }
+
+  // Update last_accessed
+  await sb.from('colony_saves').update({ last_accessed: new Date().toISOString() }).eq('colony_code', code);
+
+  setLoading('load-btn', false);
+
+  const msg = document.getElementById('load-success-msg');
+  msg.textContent = '✓ ' + data.colony_name + ' loaded successfully.';
+  document.getElementById('create-result').classList.remove('show');
+  document.getElementById('load-result').classList.add('show');
+}
+
+function copyCode() {
+  if (!lastCreatedCode) return;
+  navigator.clipboard.writeText(lastCreatedCode).then(() => {
+    showNotif('Code copied to clipboard!', 'success');
+  }).catch(() => {
+    showNotif('Could not copy — please copy it manually.', 'error');
+  });
+}
 </script>
 </body>
 </html>
