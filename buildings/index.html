@@ -548,7 +548,7 @@ function fmtSource(s) {
 const SOURCE_NOTES = {
     miner: 'The Miner randomly mines a bonus ore on each trip. Higher level buildings unlock rarer ores. The table shown is the full pool at this level — all previous ores are included. Note: Level 5 has the same drop table as Level 4.',
     nether_mine: 'The Nether Worker brings back materials from each Nether trip. Higher level buildings unlock rarer drops. The table shown is the full pool at this level — all previous items are included.',
-    enchanter: 'The Enchanter produces enchanted books. Higher level buildings unlock more enchantment options. The table shown is the full pool at this level — all previous enchantments are included.',
+    enchanter: 'The Enchanter produces enchanted books by rolling from a single self-contained pool per building level. Higher building levels do NOT add to lower level drops — the pool shifts toward rarer, stronger enchantments instead. At levels 4 and 5, common enchantments like Sharpness I and Protection I are removed from the pool entirely and replaced by higher-tier versions.',
     fisher: 'The Fisherman rolls each bonus table independently on every catch. At Level 5 they roll the Level 3, 4, and 5 tables as separate independent chances — not one combined pool. Levels 1 and 2 have no bonus drops. Note: Level 5 has the same bonus table as Level 4.',
     sifter: 'Each mesh and substrate combination has its own independent drop table. Better meshes and substrates generally yield rarer drops.'
 };
@@ -570,7 +570,7 @@ function cap(str) {
 }
 
 // Sources where higher levels include all lower level drops in one pool
-const CUMULATIVE_SOURCES = ['enchanter', 'nether_mine', 'miner'];
+const CUMULATIVE_SOURCES = ['nether_mine', 'miner'];
 
 function detailLevel(d) {
     // Extract the trailing number from any source_detail string
