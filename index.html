@@ -601,7 +601,9 @@ async function loadColony() {
   // Update last_accessed
   await sb.from('colony_saves').update({ last_accessed: new Date().toISOString() }).eq('colony_code', code);
 
-  setLoading('load-btn', false);
+  // Save to sessionStorage so other pages can use it
+  sessionStorage.setItem('colonyCode', code);
+  sessionStorage.setItem('colonyName', data.colony_name);
 
   const msg = document.getElementById('load-success-msg');
   msg.textContent = '✓ ' + data.colony_name + ' loaded successfully.';
