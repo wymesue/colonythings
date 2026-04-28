@@ -271,12 +271,35 @@ nav{
   background:#0a1018;
   border:1px solid var(--green);
   border-radius:8px;
-  padding:14px 16px;
+  padding:20px 16px;
   text-align:center;
-  font-family:'Cinzel',serif;
-  font-size:14px;
-  color:var(--green);
 }
+.load-success-name{
+  font-family:'Cinzel',serif;
+  font-size:18px;
+  color:var(--green);
+  font-weight:700;
+  margin-bottom:4px;
+}
+.load-success-sub{
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:14px;
+}
+.btn-dashboard{
+  display:inline-block;
+  padding:10px 24px;
+  border-radius:8px;
+  font-family:'Cinzel',serif;
+  font-size:13px;
+  font-weight:600;
+  background:var(--green);
+  color:#0a0e14;
+  text-decoration:none;
+  transition:background .2s;
+  letter-spacing:.3px;
+}
+.btn-dashboard:hover{background:#5db87e}
 
 /* DIVIDER */
 .divider{
@@ -447,10 +470,17 @@ footer a:hover{color:var(--accent)}
           <button class="btn-copy" onclick="copyCode()">Copy</button>
         </div>
         <div class="result-warning">⚠️ Write this down — it's the only way to access your colony. There are no accounts or password resets.</div>
+        <div style="text-align:center;margin-top:14px">
+          <a href="/colony" class="btn-dashboard">🏰 Go to Dashboard →</a>
+        </div>
       </div>
 
       <div class="colony-result" id="load-result">
-        <div class="load-success" id="load-success-msg"></div>
+        <div class="load-success">
+          <div class="load-success-name" id="load-success-name"></div>
+          <div class="load-success-sub">Colony loaded successfully</div>
+          <a href="/colony" class="btn-dashboard">🏰 Go to Dashboard →</a>
+        </div>
       </div>
 
     </div>
@@ -575,6 +605,9 @@ async function createColony() {
   }
 
   lastCreatedCode = code;
+  // Set sessionStorage so dashboard works immediately after create
+  sessionStorage.setItem('colonyCode', code);
+  sessionStorage.setItem('colonyName', name);
   document.getElementById('result-code-value').textContent = code;
   document.getElementById('load-result').classList.remove('show');
   document.getElementById('create-result').classList.add('show');
@@ -605,8 +638,8 @@ async function loadColony() {
   sessionStorage.setItem('colonyCode', code);
   sessionStorage.setItem('colonyName', data.colony_name);
 
-  const msg = document.getElementById('load-success-msg');
-  msg.textContent = '✓ ' + data.colony_name + ' loaded successfully.';
+  const msg = document.getElementById('load-success-name');
+  msg.textContent = data.colony_name;
   document.getElementById('create-result').classList.remove('show');
   document.getElementById('load-result').classList.add('show');
 }
