@@ -215,7 +215,15 @@
         }
         .recipe-inputs li:last-child { border-bottom: none; }
         .recipe-inputs .qty { color: var(--text-dim); }
-        .recipe-research { font-size: 0.8rem; color: var(--gold); font-style: italic; }
+        .recipe-research {
+            font-size: 0.8rem;
+            color: var(--gold);
+            background: rgba(201,168,76,0.1);
+            border: 1px solid rgba(201,168,76,0.3);
+            border-radius: 4px;
+            padding: 0.3rem 0.6rem;
+            margin-top: 0.2rem;
+        }
         .recipe-notes { font-size: 0.8rem; color: var(--text-dim); font-style: italic; }
 
         /* ─── Loot tables ─── */
@@ -410,17 +418,20 @@ function renderBuildings() {
         return;
     }
 
-    grid.innerHTML = list.map(b => `
+    grid.innerHTML = list.map(b => {
+        const desc = (b.description || '').replace(/^Formerly [^.]+\.\s*/i, '');
+        return `
         <div class="building-card">
             <div class="building-name">${b.name}</div>
             <div class="building-meta">
                 <span class="building-category">${b.category}</span>
                 ${pips(b.max_level)}
             </div>
-            ${b.description ? `<div class="building-desc">${b.description}</div>` : ''}
+            ${desc ? `<div class="building-desc">${desc}</div>` : ''}
             ${b.unlocked_by_research ? `<div class="building-unlock">Requires research: ${b.unlocked_by_research}</div>` : ''}
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 function pips(max) {
@@ -576,7 +587,7 @@ function renderLootSubTabs() {
 
     if (!activeLootSub || !details.includes(activeLootSub)) activeLootSub = details[details.length - 1]; // default to highest
 
-    el.innerHTML = details.map(d => `
+    el.innerHTML = [...details].reverse().map(d => `
         <button class="loot-sub-btn${d === activeLootSub ? ' active' : ''}" data-sub="${d}">
             ${fmtDetail(d, activeLootSource)}
         </button>
@@ -620,7 +631,28 @@ function renderLootTable() {
     const hasMinLevel = rows.some(r => r.min_building_level != null);
     const showSrcLevel = isCumulative(activeLootSource);
 
-    rows = [...rows].sort((a, b) => (b.weight || 0) - (a.weight || 0));
+    // Deduplicate: collapse same item name across levels, summing weights, keeping lowest src level
+    const deduped = [];
+    const seen = new Map();
+    for (const r of rows) {
+        if (seen.has(r.item)) {
+            const existing = seen.get(r.item);
+            existing.weight = (existing.weight || 0) + (r.weight || 0);
+            // keep the lowest level tag
+            const existLvl = detailLevel(existing.source_detail);
+            const thisLvl = detailLevel(r.source_detail);
+            if (thisLvl !== null && (existLvl === null || thisLvl < existLvl)) {
+                existing.source_detail = r.source_detail;
+            }
+        } else {
+            const copy = { ...r };
+            seen.set(r.item, copy);
+            deduped.push(copy);
+        }
+    }
+
+    const dedupedTotal = deduped.reduce((s, r) => s + (r.weight || 0), 0);
+    deduped.sort((a, b) => (b.weight || 0) - (a.weight || 0));
 
     container.innerHTML = `
         ${cumulative ? `<p class="loot-note">Showing all drops available at this level — higher levels add more items, which lowers individual drop chances.</p>` : ''}
@@ -634,8 +666,8 @@ function renderLootTable() {
                 </tr>
             </thead>
             <tbody>
-                ${rows.map(r => {
-                    const pct = totalWeight > 0 ? ((r.weight / totalWeight) * 100).toFixed(1) : '0.0';
+                ${deduped.map(r => {
+                    const pct = dedupedTotal > 0 ? ((r.weight / dedupedTotal) * 100).toFixed(1) : '0.0';
                     const amt = r.min_amount === r.max_amount ? r.min_amount : `${r.min_amount}–${r.max_amount}`;
                     const srcLvl = detailLevel(r.source_detail);
                     return `
