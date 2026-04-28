@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Colony Dashboard — Colony Things</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0a0e14;--card:#0d1420;--border:#1e3048;--text:#d8e8f0;
+  --muted:#5a7a90;--accent:#7dbde8;--gold:#c9a84c;--green:#4a9e6a;
+  --red:#c0504a;--amber:#c87d3a;--dark:#070d16;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',Georgia,serif;line-height:1.6;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(125,189,232,.06) 0%,transparent 60%);pointer-events:none;z-index:0}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:28px}
+.nav-logo{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--accent);letter-spacing:.5px;text-decoration:none}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-size:14px;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a.active{color:var(--accent)}
+
+/* HERO */
+.colony-hero{
+  background:var(--dark);border:1px solid var(--border);border-radius:14px;
+  padding:28px 32px;margin-bottom:24px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  flex-wrap:wrap;
+}
+.colony-hero-left{display:flex;align-items:center;gap:16px}
+.colony-icon{font-size:48px}
+.colony-name{font-family:'Cinzel',serif;font-size:28px;font-weight:700;color:var(--gold);margin-bottom:4px}
+.colony-code{font-size:13px;color:var(--muted);font-style:italic;margin-bottom:4px}
+.colony-accessed{font-size:12px;color:#3d5a70}
+.colony-hero-tools{display:flex;gap:8px;flex-wrap:wrap}
+.tool-link{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:8px;
+  font-family:'Cinzel',serif;font-size:12px;font-weight:600;
+  border:1px solid var(--border);background:var(--card);
+  color:var(--muted);text-decoration:none;transition:all .2s;
+}
+.tool-link:hover{border-color:var(--accent);color:var(--accent)}
+
+/* DASHBOARD GRID */
+.dash-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:40px;
+}
+.dash-card{
+  background:var(--dark);border:1px solid var(--border);border-radius:12px;padding:20px;
+}
+.dash-card.full{grid-column:1/-1}
+.dash-card-title{
+  font-family:'Cinzel',serif;font-size:13px;font-weight:700;
+  color:var(--muted);text-transform:uppercase;letter-spacing:.5px;
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.dash-card-title a{
+  margin-left:auto;font-size:11px;color:var(--accent);text-decoration:none;
+  border:1px solid rgba(125,189,232,.2);border-radius:4px;padding:2px 8px;
+  transition:all .2s;font-weight:600;letter-spacing:.3px;
+}
+.dash-card-title a:hover{background:rgba(125,189,232,.08)}
+
+/* RESEARCH SUMMARY */
+.research-bars{display:flex;flex-direction:column;gap:10px}
+.res-tree{display:flex;align-items:center;gap:10px}
+.res-tree-name{font-family:'Cinzel',serif;font-size:12px;width:90px;flex-shrink:0}
+.res-bar-wrap{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;display:flex}
+.res-bar-done{height:100%;background:var(--green);border-radius:4px 0 0 4px}
+.res-bar-mat{height:100%;background:var(--amber)}
+.res-bar-plan{height:100%;background:#3b82f6}
+.res-counts{font-size:11px;color:var(--muted);white-space:nowrap;width:80px;text-align:right}
+.res-legend{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
+.res-legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+.res-legend-dot{width:8px;height:8px;border-radius:2px}
+
+/* BUILDINGS */
+.bld-list{display:flex;flex-direction:column;gap:4px}
+.bld-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(30,48,72,.5);font-size:13px}
+.bld-row:last-child{border-bottom:none}
+.bld-row-name{color:var(--text)}
+.bld-row-level{
+  font-family:'Cinzel',serif;font-size:12px;font-weight:700;
+  color:var(--accent);background:rgba(125,189,232,.08);
+  border:1px solid rgba(125,189,232,.2);border-radius:4px;
+  padding:1px 8px;
+}
+.empty-state{font-size:13px;color:var(--muted);font-style:italic;text-align:center;padding:20px 0}
+
+/* BIOMES */
+.biome-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.biome-chip{
+  padding:4px 12px;border-radius:6px;font-family:'Cinzel',serif;font-size:12px;
+  background:rgba(125,189,232,.08);border:1px solid rgba(125,189,232,.2);color:var(--accent);
+}
+.crop-chips{display:flex;flex-wrap:wrap;gap:4px}
+.crop-chip{
+  padding:2px 8px;border-radius:4px;font-size:12px;
+  background:rgba(74,158,106,.1);border:1px solid rgba(74,158,106,.2);color:var(--green);
+}
+.crop-section-label{font-size:11px;color:var(--muted);font-family:'Cinzel',serif;letter-spacing:.3px;margin:8px 0 4px}
+
+/* MEALS */
+.meal-chips{display:flex;flex-wrap:wrap;gap:6px}
+.meal-chip{
+  padding:4px 12px;border-radius:6px;font-size:13px;
+  background:var(--card);border:1px solid var(--border);color:var(--text);
+}
+.meal-chip.lvl5{border-left:3px solid var(--green)}
+.meal-chip.lvl3{border-left:3px solid var(--gold)}
+.meal-chip.lvl1{border-left:3px solid var(--muted)}
+
+/* INGREDIENTS */
+.ing-chips{display:flex;flex-wrap:wrap;gap:4px}
+.ing-chip{
+  padding:2px 8px;border-radius:4px;font-size:12px;
+  background:var(--card);border:1px solid var(--border);color:#b8d0e0;
+}
+
+/* NO DATA */
+.no-colony{
+  text-align:center;padding:80px 24px;
+}
+.no-colony-icon{font-size:56px;margin-bottom:16px}
+.no-colony-title{font-family:'Cinzel',serif;font-size:22px;color:var(--gold);margin-bottom:8px}
+.no-colony-msg{font-size:15px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+.no-colony-btn{
+  display:inline-block;padding:12px 28px;border-radius:8px;
+  font-family:'Cinzel',serif;font-size:14px;font-weight:600;
+  background:var(--accent);color:#0a0e14;text-decoration:none;transition:background .2s;
+}
+.no-colony-btn:hover{background:#9acfee}
+
+.loading{text-align:center;padding:60px;color:var(--muted);font-style:italic;font-size:18px}
+
+footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color:var(--muted);font-size:14px;margin-top:40px}
+
+@media(max-width:800px){
+  .dash-grid{grid-template-columns:1fr}
+  .dash-card.full{grid-column:1}
+  nav{flex-direction:column;gap:12px}
+  .colony-hero{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a href="/" class="nav-logo">Colony Things</a>
+    <ul class="nav-links">
+      <li><a href="/university">University</a></li>
+      <li><a href="/food">Food</a></li>
+      <li><a href="/recipes">Recipes</a></li>
+      <li><a href="/buildings">Buildings</a></li>
+    </ul>
+  </nav>
+
+  <div id="no-colony" style="display:none" class="no-colony">
+    <div class="no-colony-icon">🏰</div>
+    <div class="no-colony-title">No Colony Loaded</div>
+    <div class="no-colony-msg">Load your colony code on the home page first,<br>then come back here to see your dashboard.</div>
+    <a href="/" class="no-colony-btn">Go to Home Page</a>
+  </div>
+
+  <div id="app-loading" class="loading">Loading your colony…</div>
+
+  <div id="app" style="display:none">
+    <!-- COLONY HERO -->
+    <div class="colony-hero">
+      <div class="colony-hero-left">
+        <div class="colony-icon">🏰</div>
+        <div>
+          <div class="colony-name" id="colony-name"></div>
+          <div class="colony-code" id="colony-code"></div>
+          <div class="colony-accessed" id="colony-accessed"></div>
+        </div>
+      </div>
+      <div class="colony-hero-tools">
+        <a href="/university" class="tool-link">🎓 University</a>
+        <a href="/food" class="tool-link">🍖 Food Planner</a>
+        <a href="/recipes" class="tool-link">📜 Recipes</a>
+        <a href="/buildings" class="tool-link">🏗️ Buildings</a>
+      </div>
+    </div>
+
+    <!-- DASHBOARD GRID -->
+    <div class="dash-grid">
+
+      <!-- RESEARCH -->
+      <div class="dash-card full">
+        <div class="dash-card-title">
+          🎓 Research Progress
+          <a href="/university">Open Planner →</a>
+        </div>
+        <div class="research-bars" id="research-bars"></div>
+        <div class="res-legend">
+          <div class="res-legend-item"><div class="res-legend-dot" style="background:var(--green)"></div>Done</div>
+          <div class="res-legend-item"><div class="res-legend-dot" style="background:var(--amber)"></div>Materials</div>
+          <div class="res-legend-item"><div class="res-legend-dot" style="background:#3b82f6"></div>Planned</div>
+        </div>
+      </div>
+
+      <!-- BUILDINGS -->
+      <div class="dash-card">
+        <div class="dash-card-title">
+          🏗️ Building Levels
+          <a href="/university">Update →</a>
+        </div>
+        <div class="bld-list" id="bld-list"></div>
+      </div>
+
+      <!-- BIOMES & CROPS -->
+      <div class="dash-card">
+        <div class="dash-card-title">
+          🌍 Biomes & Crops
+          <a href="/food">Update →</a>
+        </div>
+        <div id="biomes-content"></div>
+      </div>
+
+      <!-- PLANNED MEALS -->
+      <div class="dash-card">
+        <div class="dash-card-title">
+          🍖 Planned Meals
+          <a href="/food">Update →</a>
+        </div>
+        <div id="meals-content"></div>
+      </div>
+
+      <!-- INGREDIENTS -->
+      <div class="dash-card">
+        <div class="dash-card-title">
+          🧺 Available Ingredients
+          <a href="/food">Update →</a>
+        </div>
+        <div id="ings-content"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>Colony Things — a fan-made Minecolonies companion · Made with ♥ by <strong>Blu</strong> (Bludeuwedd)</p>
+  </footer>
+</div>
+
+<script>
+const SUPABASE_URL='https://lihxhwcrlnvsqpfqtggc.supabase.co';
+const SUPABASE_KEY='sb_publishable_OfZ9MzjXjDGime_xNJj7hA_Bi5-EQ8V';
+const H={'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`};
+
+const COLONY_CODE=sessionStorage.getItem('colonyCode')||null;
+const COLONY_NAME=sessionStorage.getItem('colonyName')||null;
+
+// Research tree totals (from DB)
+const TREE_TOTALS={civilian:68,combat:57,technology:77};
+
+async function init(){
+  document.getElementById('app-loading').style.display='';
+
+  if(!COLONY_CODE){
+    document.getElementById('app-loading').style.display='none';
+    document.getElementById('no-colony').style.display='';
+    return;
+  }
+
+  try{
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/colony_saves?colony_code=eq.${encodeURIComponent(COLONY_CODE)}&select=*`,{headers:H});
+    const rows=await res.json();
+    if(!rows||!rows.length){
+      document.getElementById('app-loading').style.display='none';
+      document.getElementById('no-colony').style.display='';
+      return;
+    }
+    const colony=rows[0];
+    const sd=colony.save_data||{};
+
+    document.getElementById('app-loading').style.display='none';
+    document.getElementById('app').style.display='';
+
+    // Hero
+    document.getElementById('colony-name').textContent=colony.colony_name;
+    document.getElementById('colony-code').textContent=colony.colony_code;
+    const accessed=colony.last_accessed?new Date(colony.last_accessed).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):'Never';
+    document.getElementById('colony-accessed').textContent='Last accessed: '+accessed;
+
+    renderResearch(sd.research||{});
+    renderBuildings(sd.buildings||{});
+    renderBiomes(sd.biomes||[],sd.ingredients||{});
+    renderMeals(sd.planned_meals||[]);
+    renderIngredients(sd.ingredients||{});
+
+  }catch(e){
+    console.error(e);
+    document.getElementById('app-loading').style.display='none';
+    document.getElementById('no-colony').style.display='';
+  }
+}
+
+function renderResearch(research){
+  const trees=['civilian','combat','technology'];
+  const treeLabels={civilian:'🏘️ Civilian',combat:'⚔️ Combat',technology:'⚙️ Technology'};
+  const counts={civilian:{done:0,materials:0,plan:0},combat:{done:0,materials:0,plan:0},technology:{done:0,materials:0,plan:0}};
+
+  // We don't have research data loaded here so we use counts from save_data
+  // research is keyed by research id, value is 'done'|'materials'|'plan'
+  // We need tree info — fetch it
+  fetch(`${SUPABASE_URL}/rest/v1/research?select=id,tree`,{headers:H})
+    .then(r=>r.json())
+    .then(rows=>{
+      const treeMap={};
+      rows.forEach(r=>treeMap[r.id]=r.tree);
+      Object.entries(research).forEach(([id,status])=>{
+        const tree=treeMap[parseInt(id)];
+        if(tree&&counts[tree]&&status) counts[tree][status]=(counts[tree][status]||0)+1;
+      });
+      const el=document.getElementById('research-bars');
+      el.innerHTML=trees.map(tree=>{
+        const total=TREE_TOTALS[tree];
+        const d=counts[tree].done||0;
+        const m=counts[tree].materials||0;
+        const p=counts[tree].plan||0;
+        const dpct=Math.round(d/total*100);
+        const mpct=Math.round(m/total*100);
+        const ppct=Math.round(p/total*100);
+        return`<div class="res-tree">
+          <span class="res-tree-name">${treeLabels[tree]}</span>
+          <div class="res-bar-wrap">
+            <div class="res-bar-done" style="width:${dpct}%"></div>
+            <div class="res-bar-mat" style="width:${mpct}%"></div>
+            <div class="res-bar-plan" style="width:${ppct}%"></div>
+          </div>
+          <span class="res-counts">${d}/${total} done</span>
+        </div>`;
+      }).join('');
+    });
+}
+
+function renderBuildings(buildings){
+  const el=document.getElementById('bld-list');
+  const entries=Object.entries(buildings).filter(([,lvl])=>lvl>0).sort((a,b)=>b[1]-a[1]);
+  if(!entries.length){
+    el.innerHTML='<div class="empty-state">No building levels set yet.<br>Go to University → Buildings tab.</div>';
+    return;
+  }
+  el.innerHTML=entries.map(([name,lvl])=>`
+    <div class="bld-row">
+      <span class="bld-row-name">${name}</span>
+      <span class="bld-row-level">Level ${lvl}</span>
+    </div>
+  `).join('');
+}
+
+async function renderBiomes(biomeNames,ingredients){
+  const el=document.getElementById('biomes-content');
+  if(!biomeNames.length){
+    el.innerHTML='<div class="empty-state">No biomes selected yet.<br>Go to the Food Planner.</div>';
+    return;
+  }
+
+  // Fetch biome display names and crops
+  const[bRes,bcRes]=await Promise.all([
+    fetch(`${SUPABASE_URL}/rest/v1/biomes?select=*`,{headers:H}),
+    fetch(`${SUPABASE_URL}/rest/v1/biome_crops?select=*`,{headers:H}),
+  ]);
+  const biomes=await bRes.json();
+  const biomeCrops=await bcRes.json();
+  const biomeById=Object.fromEntries(biomes.map(b=>[b.name,b]));
+
+  let html='<div class="biome-chips">';
+  biomeNames.forEach(name=>{
+    const b=biomeById[name];
+    if(b) html+=`<span class="biome-chip">${b.display_name}</span>`;
+  });
+  html+='</div>';
+
+  // Crops from selected biomes
+  const selectedCrops=new Set();
+  biomeCrops.forEach(bc=>{
+    const b=biomes.find(x=>x.id===bc.biome_id);
+    if(b&&(biomeNames.includes(b.name)||b.name==='all')) selectedCrops.add(bc.crop);
+  });
+
+  if(selectedCrops.size){
+    html+=`<div class="crop-section-label">Available Crops</div><div class="crop-chips">`;
+    [...selectedCrops].sort().forEach(c=>html+=`<span class="crop-chip">${c}</span>`);
+    html+='</div>';
+  }
+
+  el.innerHTML=html;
+}
+
+function renderMeals(meals){
+  const el=document.getElementById('meals-content');
+  if(!meals.length){
+    el.innerHTML='<div class="empty-state">No meals planned yet.<br>Go to the Food Planner.</div>';
+    return;
+  }
+  el.innerHTML='<div class="meal-chips">'+meals.map(name=>`<span class="meal-chip">${name}</span>`).join('')+'</div>';
+}
+
+function renderIngredients(ingredients){
+  const el=document.getElementById('ings-content');
+  const checked=Object.entries(ingredients).filter(([,v])=>v).map(([k])=>k);
+  const always=['Large Water Bottle','Bowl','Stick'];
+  const all=[...new Set([...always,...checked])].sort();
+  if(!all.length){
+    el.innerHTML='<div class="empty-state">No ingredients set.</div>';
+    return;
+  }
+  el.innerHTML='<div class="ing-chips">'+all.map(i=>`<span class="ing-chip">${i}</span>`).join('')+'</div>';
+}
+
+init();
+</script>
+</body>
+</html>
