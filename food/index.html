@@ -29,14 +29,21 @@ nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between
 .page-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;color:var(--text);margin-bottom:4px}
 .page-desc{font-size:15px;color:#7a9ab0;font-style:italic;margin-bottom:20px}
 
-/* TABS */
+/* MAIN TABS */
 .tab-nav{display:flex;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:4px;width:fit-content;margin-bottom:24px}
 .tab-btn{padding:8px 22px;border-radius:7px;font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:.3px;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .15s}
 .tab-btn:hover{color:var(--text)}
 .tab-btn.active{background:#172840;color:var(--accent)}
-
 .tab-content{display:none}
 .tab-content.active{display:block}
+
+/* SUB TABS */
+.sub-tab-nav{display:flex;gap:3px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:0}
+.sub-tab-btn{padding:6px 16px;border-radius:7px 7px 0 0;font-family:'Cinzel',serif;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;border-bottom:none;background:transparent;color:var(--muted);transition:all .15s;position:relative;bottom:-1px}
+.sub-tab-btn:hover{color:var(--text)}
+.sub-tab-btn.active{background:var(--dark);border-color:var(--border);color:var(--accent)}
+.sub-tab-content{display:none}
+.sub-tab-content.active{display:block}
 
 /* LOADING */
 .loading{text-align:center;padding:60px;color:var(--muted);font-style:italic;font-size:18px}
@@ -50,40 +57,41 @@ nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between
 .biome-card.selected .biome-check{opacity:1}
 .biome-name{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
 .biome-check{opacity:0;color:var(--green);transition:opacity .2s;font-size:18px}
-.biome-crops{font-size:13px;color:#8aabbf;line-height:1.7}
 .biome-crop-tag{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(125,189,232,.08);border:1px solid rgba(125,189,232,.15);color:var(--accent);font-size:12px;margin:2px 3px 2px 0}
+.biome-crop-tag.have{background:rgba(74,158,106,.15);border-color:rgba(74,158,106,.3);color:var(--green)}
 .universal-box{background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px}
 .universal-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px;letter-spacing:.5px}
 
-/* INGREDIENTS TAB */
-.ing-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.ing-section{background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:16px}
-.ing-section-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);margin-bottom:12px;letter-spacing:.5px;text-transform:uppercase}
+/* AVAILABLE CROPS BOX */
+.have-crops-box{background:rgba(74,158,106,.08);border:1px solid rgba(74,158,106,.25);border-radius:10px;padding:14px;margin-bottom:16px}
+.have-crops-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px;letter-spacing:.5px}
+.have-crops-empty{font-size:13px;color:var(--muted);font-style:italic}
+
+/* INGREDIENTS */
+.ing-box{background:var(--dark);border:1px solid var(--border);border-radius:0 10px 10px 10px;padding:16px}
 .ing-list{display:flex;flex-direction:column;gap:4px}
 .ing-row{display:flex;align-items:center;gap:10px;padding:5px 8px;border-radius:6px;cursor:pointer;transition:background .15s}
 .ing-row:hover{background:rgba(125,189,232,.05)}
 .ing-row input[type=checkbox]{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
 .ing-row label{font-size:14px;color:#b8d0e0;cursor:pointer;flex:1}
-.ing-row.biome-ing label{color:var(--accent)}
-.ing-row.biome-ing{opacity:.5;pointer-events:none}
-.ing-row.biome-ing.available{opacity:1}
-.ing-note{font-size:11px;color:var(--muted);font-style:italic}
+.ing-row.locked-ing{opacity:.4;pointer-events:none}
+.ing-row.locked-ing.available{opacity:1}
+.ing-note{font-size:11px;color:var(--muted);font-style:italic;margin-left:4px}
+.ing-cat-note{font-size:12px;color:var(--muted);font-style:italic;margin-bottom:10px}
 
-/* MEALS TAB */
+/* MEALS */
 .meals-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
-.meals-main{}
-.meal-section{margin-bottom:32px}
+.meal-section{margin-bottom:28px}
 .meal-section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .meal-section-name{font-family:'Cinzel',serif;font-size:17px;font-weight:700}
 .meal-section-count{font-size:12px;color:var(--muted);padding:2px 8px;background:var(--card);border:1px solid var(--border);border-radius:999px}
 .lvl5-color{color:#4a9e6a}.lvl3-color{color:#c9a84c}.lvl1-color{color:#5a7a90}
 .meals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
-.meal-card{background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;transition:border-color .15s}
+.meal-card{background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color .15s}
 .meal-card:hover{border-color:#2a4060}
 .meal-card.lvl5{border-left:3px solid var(--green)}
 .meal-card.lvl3{border-left:3px solid var(--gold)}
 .meal-card.lvl1{border-left:3px solid var(--muted)}
-.meal-card.unavailable{opacity:0.4;filter:grayscale(.4)}
 .meal-name{font-family:'Cinzel',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
 .meal-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
 .crafter-badge{padding:2px 6px;border-radius:4px;font-family:'Cinzel',serif;font-size:10px;font-weight:600}
@@ -91,11 +99,11 @@ nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between
 .crafter-Baker{background:rgba(201,168,76,.1);color:#c9a84c;border:1px solid rgba(201,168,76,.25)}
 .crafter-Chef{background:rgba(192,80,74,.1);color:#d47070;border:1px solid rgba(192,80,74,.25)}
 .biome-tag{padding:2px 6px;border-radius:4px;font-size:10px;font-family:'Cinzel',serif;background:rgba(125,189,232,.08);color:var(--accent);border:1px solid rgba(125,189,232,.2)}
-.meal-ings{font-size:13px;color:#b8d0e0;line-height:1.7;margin-bottom:8px}
+.meal-ings{font-size:13px;color:#b8d0e0;line-height:1.8;margin-bottom:8px}
 .ing-base{color:#c8dce8}
 .ing-inter{color:var(--amber)}
 .ing-biome{color:var(--accent)}
-.ing-missing{color:var(--red);text-decoration:line-through;opacity:.6}
+.ing-missing{color:var(--red);font-weight:600}
 .ing-count{color:var(--accent);font-weight:700}
 .plan-btn{width:100%;padding:6px;border-radius:6px;font-family:'Cinzel',serif;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:#0d1e30;color:var(--muted);transition:all .15s}
 .plan-btn:hover{background:#132840;color:var(--text)}
@@ -119,7 +127,6 @@ nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between
 footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color:var(--muted);font-size:14px;margin-top:40px}
 
 @media(max-width:900px){
-  .ing-layout{grid-template-columns:1fr}
   .meals-layout{grid-template-columns:1fr}
   nav{flex-direction:column;gap:12px}
 }
@@ -152,7 +159,7 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
     <!-- BIOMES TAB -->
     <div class="tab-content active" id="tab-biomes">
       <div class="universal-box">
-        <div class="universal-title">🌿 Universal Crops — Available Everywhere</div>
+        <div class="universal-title">🌿 Universal Crops — Available in All Biomes</div>
         <div id="universal-crops"></div>
       </div>
       <div class="biome-grid" id="biome-grid"></div>
@@ -160,13 +167,61 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
 
     <!-- INGREDIENTS TAB -->
     <div class="tab-content" id="tab-ingredients">
-      <div class="ing-layout" id="ing-layout"></div>
+      <div class="sub-tab-nav" id="ing-sub-nav">
+        <button class="sub-tab-btn active" data-sub="biome-crops">🌍 Biome Crops</button>
+        <button class="sub-tab-btn" data-sub="animal">🐄 Animal Products</button>
+        <button class="sub-tab-btn" data-sub="vanilla">🥕 Vanilla</button>
+        <button class="sub-tab-btn" data-sub="always">✅ Always Available</button>
+      </div>
+
+      <div class="sub-tab-content active" id="sub-biome-crops">
+        <div class="have-crops-box" id="have-crops-box">
+          <div class="have-crops-title">✅ Crops You Have</div>
+          <div id="have-crops-list"><div class="have-crops-empty">No biomes selected yet — go to the Biomes tab!</div></div>
+        </div>
+        <div class="ing-box">
+          <div class="ing-cat-note">These are controlled by your biome selections. Go to the 🌍 Biomes tab to change them.</div>
+          <div class="ing-list" id="ing-biome-list"></div>
+        </div>
+      </div>
+
+      <div class="sub-tab-content" id="sub-animal">
+        <div class="ing-box">
+          <div class="ing-cat-note">From your animal farms, fisher, and apiary.</div>
+          <div class="ing-list" id="ing-animal-list"></div>
+        </div>
+      </div>
+
+      <div class="sub-tab-content" id="sub-vanilla">
+        <div class="ing-box">
+          <div class="ing-cat-note">Standard Minecraft ingredients available from farming or gathering.</div>
+          <div class="ing-list" id="ing-vanilla-list"></div>
+        </div>
+      </div>
+
+      <div class="sub-tab-content" id="sub-always">
+        <div class="ing-box">
+          <div class="ing-cat-note">These are always available — pre-checked for you.</div>
+          <div class="ing-list" id="ing-always-list"></div>
+        </div>
+      </div>
     </div>
 
     <!-- MEALS TAB -->
     <div class="tab-content" id="tab-meals">
       <div class="meals-layout">
-        <div class="meals-main" id="meals-main"></div>
+        <div class="meals-main">
+          <div class="sub-tab-nav" id="meals-sub-nav">
+            <button class="sub-tab-btn active" data-sub="available">✅ Available <span id="avail-count" style="font-size:10px;margin-left:3px"></span></button>
+            <button class="sub-tab-btn" data-sub="notyet">🧙 Not Yet <span id="notyet-count" style="font-size:10px;margin-left:3px"></span></button>
+          </div>
+          <div class="sub-tab-content active" id="sub-available">
+            <div id="meals-available"></div>
+          </div>
+          <div class="sub-tab-content" id="sub-notyet">
+            <div id="meals-notyet"></div>
+          </div>
+        </div>
         <div class="planner-panel">
           <div class="planner-title">
             📌 Meal Plan
@@ -195,36 +250,19 @@ const SUPABASE_URL='https://lihxhwcrlnvsqpfqtggc.supabase.co';
 const SUPABASE_KEY='sb_publishable_OfZ9MzjXjDGime_xNJj7hA_Bi5-EQ8V';
 const H={'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`};
 
-// ── DATA ──────────────────────────────────────────
 let biomes=[],biomeCropsData=[],recipes=[],ingredients=[];
 let biomeById={},cropToBiome={};
 let recipeNames=new Set();
 
-// ── STATE ─────────────────────────────────────────
-const selectedBiomes=new Set(['all']); // 'all' biome always selected
-const checkedIngs=new Set([
-  'Large Water Bottle','Bowl','Stick','Large Milk Bottle'
-]);
+const selectedBiomes=new Set(['all']);
+const checkedIngs=new Set(['Large Water Bottle','Bowl','Stick','Large Milk Bottle']);
 const plannedMeals=new Set();
+const planData={};
 
-// STATIC INGREDIENT CATEGORIES
-const ING_CATS={
-  'Animal Products':{
-    items:['Large Milk Bottle','Beef','Porkchop','Mutton','Chicken','Rabbit','Egg','Salmon','Cod','Honey Bottle'],
-    note:'From your animal farms and fisher'
-  },
-  'Vanilla Ingredients':{
-    items:['Potato','Carrot','Beetroot','Apple','Sweet Berries','Sugar','Brown Mushroom','Kelp','Dried Kelp','Pumpkin'],
-    note:'Standard Minecraft items'
-  },
-  'Always Available':{
-    items:['Large Water Bottle','Bowl','Stick'],
-    note:'Auto-checked — always available',
-    auto:true
-  },
-};
+const ANIMAL_INGS=['Large Milk Bottle','Beef','Porkchop','Mutton','Chicken','Rabbit','Egg','Salmon','Cod','Honey Bottle'];
+const VANILLA_INGS=['Potato','Carrot','Beetroot','Apple','Sweet Berries','Sugar','Brown Mushroom','Kelp','Dried Kelp','Pumpkin'];
+const ALWAYS_INGS=['Large Water Bottle','Bowl','Stick'];
 
-// ── LOAD ──────────────────────────────────────────
 async function loadData(){
   try{
     const[r1,r2,r3,r4]=await Promise.all([
@@ -237,227 +275,226 @@ async function loadData(){
     biomeCropsData=await r2.json();
     recipes=await r3.json();
     ingredients=await r4.json();
-
     biomeById=Object.fromEntries(biomes.map(b=>[b.id,b]));
     biomeCropsData.forEach(bc=>{
       const b=biomeById[bc.biome_id];
-      if(b){
-        if(!cropToBiome[bc.crop]) cropToBiome[bc.crop]=[];
-        cropToBiome[bc.crop].push(b.name);
-      }
+      if(b){if(!cropToBiome[bc.crop])cropToBiome[bc.crop]=[];cropToBiome[bc.crop].push(b.name);}
     });
     recipes.forEach(r=>recipeNames.add(r.name));
-
     document.getElementById('app-loading').style.display='none';
     document.getElementById('app').style.display='';
-    renderBiomes();
-    renderIngredients();
-    renderMeals();
+    renderAll();
   }catch(e){
     document.getElementById('app-loading').style.display='none';
     document.getElementById('app-error').style.display='';
-    console.error(e);
   }
 }
 
-// ── HELPERS ───────────────────────────────────────
 function getAvailableCrops(){
   const crops=new Set();
   biomeCropsData.forEach(bc=>{
     const b=biomeById[bc.biome_id];
-    if(b&&selectedBiomes.has(b.name)) crops.add(bc.crop);
+    if(b&&selectedBiomes.has(b.name))crops.add(bc.crop);
   });
   return crops;
 }
 
 function getAllAvailable(){
   const avail=new Set([...checkedIngs,...getAvailableCrops()]);
-  // Also add anything craftable from available ingredients (intermediates)
   let changed=true;
   while(changed){
     changed=false;
     recipes.forEach(r=>{
       if(avail.has(r.name))return;
       const ings=ingredients.filter(i=>i.recipe_id===r.id);
-      if(ings.every(i=>avail.has(i.ingredient))){
-        avail.add(r.name);changed=true;
-      }
+      if(ings.every(i=>avail.has(i.ingredient))){avail.add(r.name);changed=true;}
     });
   }
   return avail;
 }
 
-function getRecipeIngs(recipeId){return ingredients.filter(i=>i.recipe_id===recipeId)}
+function getRecipeIngs(id){return ingredients.filter(i=>i.recipe_id===id)}
 
-function canMake(recipe,avail){
-  return getRecipeIngs(recipe.id).every(i=>avail.has(i.ingredient));
-}
+function canMake(r,avail){return getRecipeIngs(r.id).every(i=>avail.has(i.ingredient))}
 
 function getBiomesForRecipe(recipeId){
   const visited=new Set(),bnames=new Set();
   function traverse(rid){
     if(visited.has(rid))return;visited.add(rid);
     getRecipeIngs(rid).forEach(ing=>{
-      const biomeNames=cropToBiome[ing.ingredient];
-      if(biomeNames) biomeNames.filter(b=>b!=='all').forEach(b=>{
-        const biome=biomes.find(bm=>bm.name===b);
-        if(biome) bnames.add(biome.display_name);
+      const bns=cropToBiome[ing.ingredient];
+      if(bns)bns.filter(b=>b!=='all').forEach(b=>{
+        const bm=biomes.find(x=>x.name===b);
+        if(bm)bnames.add(bm.display_name);
       });
       const sub=recipes.find(r=>r.name===ing.ingredient);
-      if(sub) traverse(sub.id);
+      if(sub)traverse(sub.id);
     });
   }
   traverse(recipeId);
   return[...bnames];
 }
 
-function formatIngs(recipeId,avail){
+function formatIngs(recipeId,avail,showMissing){
   return getRecipeIngs(recipeId).map(ing=>{
     const qty=ing.quantity>1?`<span class="ing-count">${ing.quantity}×</span> `:'';
     const isInter=recipeNames.has(ing.ingredient);
     const isBiome=!!cropToBiome[ing.ingredient]&&!cropToBiome[ing.ingredient].includes('all');
     const isMissing=!avail.has(ing.ingredient);
-    let cls=isMissing?'ing-missing':isInter?'ing-inter':isBiome?'ing-biome':'ing-base';
+    let cls=isMissing&&showMissing?'ing-missing':isInter?'ing-inter':isBiome?'ing-biome':'ing-base';
     return`<span class="${cls}">${qty}${ing.ingredient}</span>`;
   }).join('<span style="color:#1e3048"> · </span>');
 }
 
-// ── BIOMES TAB ────────────────────────────────────
+// ── BIOMES ──────────────────────────────────────────
 function renderBiomes(){
   const allBiome=biomes.find(b=>b.name==='all');
   const otherBiomes=biomes.filter(b=>b.name!=='all');
-
-  // Universal crops
   if(allBiome){
     const crops=biomeCropsData.filter(bc=>bc.biome_id===allBiome.id).map(bc=>bc.crop);
     document.getElementById('universal-crops').innerHTML=crops.map(c=>`<span class="biome-crop-tag">${c}</span>`).join('');
   }
-
-  // Biome cards
   const grid=document.getElementById('biome-grid');
   grid.innerHTML=otherBiomes.map(b=>{
     const crops=biomeCropsData.filter(bc=>bc.biome_id===b.id).map(bc=>bc.crop);
     const sel=selectedBiomes.has(b.name);
     return`<div class="biome-card${sel?' selected':''}" data-biome="${b.name}">
       <div class="biome-name">${b.display_name}<span class="biome-check">✓</span></div>
-      <div class="biome-crops">${crops.map(c=>`<span class="biome-crop-tag">${c}</span>`).join('')}</div>
+      <div>${crops.map(c=>`<span class="biome-crop-tag${sel?' have':''}">${c}</span>`).join('')}</div>
     </div>`;
   }).join('');
-
   grid.querySelectorAll('.biome-card').forEach(card=>{
     card.addEventListener('click',()=>{
       const name=card.dataset.biome;
-      if(selectedBiomes.has(name)) selectedBiomes.delete(name);
-      else selectedBiomes.add(name);
-      renderBiomes();
-      renderIngredients();
-      renderMeals();
+      if(selectedBiomes.has(name))selectedBiomes.delete(name);else selectedBiomes.add(name);
+      renderAll();
     });
   });
 }
 
-// ── INGREDIENTS TAB ───────────────────────────────
+// ── INGREDIENTS ──────────────────────────────────────
 function renderIngredients(){
   const availCrops=getAvailableCrops();
-  const layout=document.getElementById('ing-layout');
 
-  // Build all biome crops (non-universal)
-  const biomeCropItems=biomeCropsData
+  // Have crops box
+  const haveCrops=[...availCrops].filter(c=>cropToBiome[c]&&!cropToBiome[c].includes('all'));
+  const haveBox=document.getElementById('have-crops-list');
+  haveBox.innerHTML=haveCrops.length
+    ?haveCrops.map(c=>`<span class="biome-crop-tag have">${c}</span>`).join('')
+    :'<div class="have-crops-empty">No biomes selected yet — go to the 🌍 Biomes tab!</div>';
+
+  // Biome crops list
+  const allBiomeCrops=biomeCropsData
     .filter(bc=>biomeById[bc.biome_id]?.name!=='all')
-    .map(bc=>({crop:bc.crop,biome:biomeById[bc.biome_id]?.name}));
-
-  const sections=[
-    {
-      title:'🌍 Biome Crops',
-      items:biomeCropItems,
-      isBiome:true,
-    },
-    ...Object.entries(ING_CATS).map(([title,data])=>({
-      title:`${title}`,
-      items:data.items.map(i=>({crop:i})),
-      auto:data.auto,
-      note:data.note,
-    }))
-  ];
-
-  layout.innerHTML=sections.map(sec=>{
-    const rows=sec.items.map(item=>{
-      const name=item.crop;
-      const isAvailBiome=sec.isBiome&&availCrops.has(name);
-      const isAuto=sec.auto;
-      const isChecked=isAvailBiome||isAuto||checkedIngs.has(name);
-      return`<div class="ing-row${sec.isBiome?' biome-ing':''}${isAvailBiome?' available':''}" data-ing="${name}" data-biome="${sec.isBiome?'1':'0'}">
-        <input type="checkbox" id="ing-${name.replace(/\s/g,'_')}" ${isChecked?'checked':''} ${isAvailBiome||isAuto?'disabled':''}/>
-        <label for="ing-${name.replace(/\s/g,'_')}">${name}${isAvailBiome?' <span class="ing-note">(from biome)</span>':''}</label>
-      </div>`;
-    }).join('');
-    return`<div class="ing-section">
-      <div class="ing-section-title">${sec.title}</div>
-      ${sec.note?`<div style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:8px">${sec.note}</div>`:''}
-      <div class="ing-list">${rows}</div>
+    .map(bc=>bc.crop)
+    .filter((v,i,a)=>a.indexOf(v)===i)
+    .sort();
+  document.getElementById('ing-biome-list').innerHTML=allBiomeCrops.map(crop=>{
+    const isAvail=availCrops.has(crop);
+    return`<div class="ing-row locked-ing${isAvail?' available':''}">
+      <input type="checkbox" ${isAvail?'checked':''} disabled/>
+      <label>${crop}${isAvail?' <span class="ing-note">(available from biome)</span>':' <span class="ing-note">(biome not selected)</span>'}</label>
     </div>`;
   }).join('');
 
-  // Bind checkbox events
-  layout.querySelectorAll('input[type=checkbox]:not([disabled])').forEach(cb=>{
+  // Animal
+  document.getElementById('ing-animal-list').innerHTML=ANIMAL_INGS.map(ing=>ingRow(ing)).join('');
+  // Vanilla
+  document.getElementById('ing-vanilla-list').innerHTML=VANILLA_INGS.map(ing=>ingRow(ing)).join('');
+  // Always
+  document.getElementById('ing-always-list').innerHTML=ALWAYS_INGS.map(ing=>`
+    <div class="ing-row">
+      <input type="checkbox" checked disabled/>
+      <label>${ing} <span class="ing-note">(always available)</span></label>
+    </div>`).join('');
+
+  // Bind checkboxes
+  document.querySelectorAll('#tab-ingredients input[type=checkbox]:not([disabled])').forEach(cb=>{
     cb.addEventListener('change',()=>{
-      const name=cb.closest('.ing-row').dataset.ing;
-      if(cb.checked) checkedIngs.add(name);
-      else checkedIngs.delete(name);
+      const label=cb.nextElementSibling.textContent.trim().split('(')[0].trim();
+      if(cb.checked)checkedIngs.add(label);else checkedIngs.delete(label);
       renderMeals();
     });
   });
 }
 
-// ── MEALS TAB ─────────────────────────────────────
+function ingRow(ing){
+  const checked=checkedIngs.has(ing);
+  return`<div class="ing-row" data-ing="${ing}">
+    <input type="checkbox" id="cb-${ing.replace(/\s/g,'_')}" ${checked?'checked':''}/>
+    <label for="cb-${ing.replace(/\s/g,'_')}">${ing}</label>
+  </div>`;
+}
+
+// ── MEALS ──────────────────────────────────────────
 function renderMeals(){
   const avail=getAllAvailable();
-  const main=document.getElementById('meals-main');
   const levels=[5,3,1];
-  const levelInfo={
+  const info={
     5:{label:'Level 5 — Happy For Sure',cls:'lvl5',cc:'lvl5-color'},
     3:{label:'Level 3 — Satisfied',cls:'lvl3',cc:'lvl3-color'},
     1:{label:'Level 1 — Somewhat Acceptable',cls:'lvl1',cc:'lvl1-color'},
   };
 
+  const makeable=recipes.filter(r=>canMake(r,avail));
+  const notyet=recipes.filter(r=>!canMake(r,avail));
+
+  document.getElementById('avail-count').textContent=`(${makeable.length})`;
+  document.getElementById('notyet-count').textContent=`(${notyet.length})`;
+
+  // AVAILABLE tab
   let html='';
+  let anyAvail=false;
   for(const lvl of levels){
-    const group=recipes.filter(r=>r.level===lvl);
+    const group=makeable.filter(r=>r.level===lvl);
     if(!group.length)continue;
-    const makeable=group.filter(r=>canMake(r,avail));
-    const unmakeable=group.filter(r=>!canMake(r,avail));
-    const all=[...makeable,...unmakeable];
-    const i=levelInfo[lvl];
-    html+=`<div class="meal-section">
-      <div class="meal-section-hdr">
-        <span class="meal-section-name ${i.cc}">${i.label}</span>
-        <span class="meal-section-count">${makeable.length}/${group.length} available</span>
-      </div>
-      <div class="meals-grid">
-        ${all.map(r=>{
-          const canM=canMake(r,avail);
-          const biomeReqs=getBiomesForRecipe(r.id);
-          const planned=plannedMeals.has(r.id);
-          return`<div class="meal-card ${i.cls}${canM?'':' unavailable'}">
-            <div class="meal-name">${r.name}</div>
-            <div class="meal-meta">
-              <span class="crafter-badge crafter-${r.crafter}">${r.crafter}</span>
-              ${biomeReqs.map(b=>`<span class="biome-tag">🌍 ${b}</span>`).join('')}
-            </div>
-            <div class="meal-ings">${formatIngs(r.id,avail)}</div>
-            ${r.notes?`<div style="font-size:11px;color:var(--muted);font-style:italic;margin-bottom:6px">💬 ${r.notes}</div>`:''}
-            ${canM?`<button class="plan-btn${planned?' planned':''}" onclick="togglePlan(${r.id},'${r.name.replace(/'/g,"\\'")}',${lvl})">${planned?'✓ Planned':'＋ Add to Plan'}</button>`:'<div style="font-size:11px;color:var(--red);font-style:italic">Missing ingredients</div>'}
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
+    anyAvail=true;
+    const i=info[lvl];
+    html+=mealSection(group,i,avail,false);
   }
-  main.innerHTML=html;
-  renderPlanner(avail);
+  document.getElementById('meals-available').innerHTML=anyAvail?html:'<div class="no-meals">No recipes available yet — set your biomes and ingredients first!</div>';
+
+  // NOT YET tab
+  let html2='';
+  let anyNotYet=false;
+  for(const lvl of levels){
+    const group=notyet.filter(r=>r.level===lvl);
+    if(!group.length)continue;
+    anyNotYet=true;
+    const i=info[lvl];
+    html2+=mealSection(group,i,avail,true);
+  }
+  document.getElementById('meals-notyet').innerHTML=anyNotYet?html2:'<div class="no-meals">🎉 You can make everything! Your colony eats well.</div>';
+
+  renderPlanner();
 }
 
-// ── PLANNER ───────────────────────────────────────
-const planData={}; // id -> {name, level}
+function mealSection(group,info,avail,showMissing){
+  return`<div class="meal-section">
+    <div class="meal-section-hdr">
+      <span class="meal-section-name ${info.cc}">${info.label}</span>
+      <span class="meal-section-count">${group.length} recipe${group.length!==1?'s':''}</span>
+    </div>
+    <div class="meals-grid">
+      ${group.map(r=>{
+        const biomeReqs=getBiomesForRecipe(r.id);
+        const planned=plannedMeals.has(r.id);
+        const canM=!showMissing;
+        return`<div class="meal-card ${info.cls}">
+          <div class="meal-name">${r.name}</div>
+          <div class="meal-meta">
+            <span class="crafter-badge crafter-${r.crafter}">${r.crafter}</span>
+            ${biomeReqs.map(b=>`<span class="biome-tag">🌍 ${b}</span>`).join('')}
+          </div>
+          <div class="meal-ings">${formatIngs(r.id,avail,showMissing)}</div>
+          ${r.notes?`<div style="font-size:11px;color:var(--muted);font-style:italic;margin-bottom:6px">💬 ${r.notes}</div>`:''}
+          ${canM?`<button class="plan-btn${planned?' planned':''}" onclick="togglePlan(${r.id},'${r.name.replace(/'/g,"\\'")}',${r.level})">${planned?'✓ Planned':'＋ Add to Plan'}</button>`:
+          `<div style="font-size:11px;color:var(--red);font-style:italic">Missing ingredients highlighted above</div>`}
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
 
 function togglePlan(id,name,level){
   if(plannedMeals.has(id)){plannedMeals.delete(id);delete planData[id];}
@@ -465,35 +502,29 @@ function togglePlan(id,name,level){
   renderMeals();
 }
 
-function renderPlanner(avail){
+function renderPlanner(){
   const list=document.getElementById('planner-list');
   const totals=document.getElementById('planner-totals');
   const clearBtn=document.getElementById('clear-all');
-  const count=document.getElementById('plan-count');
-  count.textContent=plannedMeals.size+' meal'+(plannedMeals.size!==1?'s':'');
-
+  document.getElementById('plan-count').textContent=plannedMeals.size+' meal'+(plannedMeals.size!==1?'s':'');
   if(!plannedMeals.size){
     list.innerHTML='<div class="planner-empty">No meals planned yet</div>';
     totals.style.display='none';clearBtn.style.display='none';return;
   }
   clearBtn.style.display='';
-
   list.innerHTML=[...plannedMeals].map(id=>{
     const d=planData[id];
     return`<div class="planner-item">
-      <span>${d?.name||'Unknown'}</span>
-      <button class="planner-remove" onclick="togglePlan(${id},'${d?.name?.replace(/'/g,"\\'")||''}',${d?.level||0})">✕</button>
+      <span>${d?.name||'?'}</span>
+      <button class="planner-remove" onclick="togglePlan(${id},'${(d?.name||'').replace(/'/g,"\\'")}',${d?.level||0})">✕</button>
     </div>`;
   }).join('');
-
-  // Totals
   const ingTotals={};
   plannedMeals.forEach(id=>{
     ingredients.filter(i=>i.recipe_id===id).forEach(i=>{
       ingTotals[i.ingredient]=(ingTotals[i.ingredient]||0)+i.quantity;
     });
   });
-
   totals.style.display='';
   document.getElementById('planner-ings').innerHTML=Object.entries(ingTotals)
     .sort((a,b)=>b[1]-a[1])
@@ -502,17 +533,36 @@ function renderPlanner(avail){
 }
 
 document.getElementById('clear-all').addEventListener('click',()=>{
-  plannedMeals.clear();Object.keys(planData).forEach(k=>delete planData[k]);
-  renderMeals();
+  plannedMeals.clear();Object.keys(planData).forEach(k=>delete planData[k]);renderMeals();
 });
 
-// ── TABS ──────────────────────────────────────────
+function renderAll(){
+  renderBiomes();
+  renderIngredients();
+  renderMeals();
+}
+
+// ── MAIN TABS ──────────────────────────────────────
 document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
 }));
+
+// ── SUB TABS ───────────────────────────────────────
+function bindSubTabs(navId,prefix){
+  document.querySelectorAll(`#${navId} .sub-tab-btn`).forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll(`#${navId} .sub-tab-btn`).forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const sub=btn.dataset.sub;
+    document.querySelectorAll(`#${prefix} .sub-tab-content`).forEach(t=>t.classList.remove('active'));
+    document.getElementById(`sub-${sub}`).classList.add('active');
+  }));
+}
+
+bindSubTabs('ing-sub-nav','tab-ingredients');
+bindSubTabs('meals-sub-nav','tab-meals');
 
 loadData();
 </script>
