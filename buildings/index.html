@@ -318,6 +318,7 @@
         <li><a href="/buildings" class="active">Buildings</a></li>
     </ul>
 </nav>
+<script>if(sessionStorage.getItem("colonyCode")){const li=document.createElement("li");li.innerHTML="<a href=\"/colony\" style=\"color:var(--gold)\">🏰 Dashboard</a>";document.querySelector(".nav-links").appendChild(li);}</script>
 
 <div class="page-header">
     <h1>Buildings Encyclopedia</h1>
