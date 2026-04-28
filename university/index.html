@@ -498,7 +498,7 @@ function renderCards(){
         ${isUnavail?'<div class="unavail-overlay"><span>✖</span></div>':''}
         <div class="rname"><span>${r.name}</span><span class="badge b${r.uni_level}">Uni ${r.uni_level}</span>${r.exclusive?'<span class="badge b6">★</span>':''}</div>
         <div class="reff">${r.effect}</div>
-        ${pName?`<div class="rmeta">🔓 <span class="dim">${pName}</span></div>`:'<div class="rmeta dim" style="font-weight:400;font-size:12px;font-style:italic;color:#3d5a70">🔓 No prerequisite</div>'}
+        ${pName?`<div class="rmeta">🔓 <span style="color:var(--gold);font-style:italic;font-weight:500">${pName}</span></div>`:'<div class="rmeta dim" style="font-weight:400;font-size:12px;font-style:italic;color:#3d5a70">🔓 No prerequisite</div>'}
         ${rb.length?`<div class="rmeta">🏗️ ${rb.map(b=>`${b.building} Lv${b.level}`).join(', ')}</div>`:''}
         <div class="rcosts">${rc.map(c=>pill(c.item,c.quantity)).join('')}</div>
         <div class="sbrow">
