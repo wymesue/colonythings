@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buildings Encyclopedia — Colony Things</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0a0e14;
+            --card: #0d1420;
+            --border: #1e3048;
+            --accent: #7dbde8;
+            --gold: #c9a84c;
+            --text: #c8d8e8;
+            --text-dim: #6a8aaa;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.05rem;
+            min-height: 100vh;
+        }
+
+        /* ─── Nav ─── */
+        nav {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        .nav-brand {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+        /* ─── Page header ─── */
+        .page-header {
+            padding: 2.5rem 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .page-header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 0.4rem;
+        }
+        .page-header p { color: var(--text-dim); font-size: 1rem; }
+
+        /* ─── Main tabs ─── */
+        .main-tabs {
+            display: flex;
+            gap: 0;
+            padding: 0 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-bottom: 1px solid var(--border);
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 0.65rem 1.4rem;
+            color: var(--text-dim);
+            font-family: 'Cinzel', serif;
+            font-size: 0.82rem;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: -1px;
+        }
+        .tab-btn:hover { color: var(--text); }
+        .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+        /* ─── Tab content ─── */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem 4rem;
+        }
+
+        /* ─── Sub-tab buttons (shared style) ─── */
+        .sub-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .sub-btn {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.35rem 0.9rem;
+            color: var(--text-dim);
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .sub-btn:hover { border-color: var(--accent); color: var(--text); }
+        .sub-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(125,189,232,0.08); }
+
+        /* ─── Buildings grid ─── */
+        .buildings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .building-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            transition: border-color 0.2s;
+        }
+        .building-card:hover { border-color: rgba(125,189,232,0.4); }
+        .building-name {
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            color: var(--accent);
+            margin-bottom: 0.4rem;
+        }
+        .building-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.65rem;
+        }
+        .building-category {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+        .level-pips { display: inline-flex; gap: 3px; align-items: center; }
+        .pip {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+        .pip.on { background: var(--gold); }
+        .building-desc {
+            font-size: 0.92rem;
+            color: var(--text);
+            line-height: 1.55;
+            margin-bottom: 0.65rem;
+        }
+        .building-unlock {
+            font-size: 0.8rem;
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        /* ─── Crafter recipes ─── */
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .recipe-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .recipe-name {
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            color: var(--gold);
+        }
+        .recipe-result {
+            font-size: 0.85rem;
+            color: var(--accent);
+        }
+        .recipe-meta {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+        .recipe-inputs {
+            list-style: none;
+            margin-top: 0.3rem;
+        }
+        .recipe-inputs li {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            padding: 0.22rem 0;
+            border-bottom: 1px solid rgba(30,48,72,0.5);
+        }
+        .recipe-inputs li:last-child { border-bottom: none; }
+        .recipe-inputs .qty { color: var(--text-dim); }
+        .recipe-research { font-size: 0.8rem; color: var(--gold); font-style: italic; }
+        .recipe-notes { font-size: 0.8rem; color: var(--text-dim); font-style: italic; }
+
+        /* ─── Loot tables ─── */
+        .loot-sub-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 1.4rem;
+        }
+        .loot-sub-btn {
+            background: rgba(10,14,20,0.8);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.28rem 0.75rem;
+            color: var(--text-dim);
+            font-family: 'Crimson Pro', serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .loot-sub-btn:hover { border-color: var(--accent); color: var(--text); }
+        .loot-sub-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.06); }
+
+        .loot-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .loot-table th {
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+            text-align: left;
+            padding: 0.5rem 0.8rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .loot-table td {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(30,48,72,0.35);
+        }
+        .loot-table tbody tr:hover td { background: rgba(13,20,32,0.7); }
+        .loot-table .col-item { color: var(--text); }
+        .loot-table .col-amt { color: var(--accent); }
+        .loot-table .col-lvl { color: var(--text-dim); }
+        .loot-table .col-pct { color: var(--text-dim); font-size: 0.82rem; }
+        .weight-bar {
+            width: 100px; height: 5px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .weight-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        /* ─── Loading / empty ─── */
+        .loading {
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        /* ─── Footer ─── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-brand">Colony Things</a>
+    <ul class="nav-links">
+        <li><a href="/recipes">Recipes</a></li>
+        <li><a href="/university">University</a></li>
+        <li><a href="/food">Food Planner</a></li>
+        <li><a href="/buildings" class="active">Buildings</a></li>
+    </ul>
+</nav>
+
+<div class="page-header">
+    <h1>Buildings Encyclopedia</h1>
+    <p>Every building, crafter recipe, and loot table for your colony.</p>
+</div>
+
+<div class="main-tabs">
+    <button class="tab-btn active" data-tab="buildings">Buildings</button>
+    <button class="tab-btn" data-tab="crafters">Crafter Recipes</button>
+    <button class="tab-btn" data-tab="loot">Loot Tables</button>
+</div>
+
+<!-- ══ BUILDINGS TAB ══ -->
+<div class="tab-panel active" id="tab-buildings">
+    <div class="content">
+        <div class="sub-tabs" id="cat-tabs">
+            <button class="sub-btn active" data-cat="All">All</button>
+            <button class="sub-btn" data-cat="Fundamentals">Fundamentals</button>
+            <button class="sub-btn" data-cat="Agriculture">Agriculture</button>
+            <button class="sub-btn" data-cat="Craftsmanship">Craftsmanship</button>
+            <button class="sub-btn" data-cat="Education">Education</button>
+            <button class="sub-btn" data-cat="Military">Military</button>
+            <button class="sub-btn" data-cat="Mystic">Mystic</button>
+        </div>
+        <div class="buildings-grid" id="buildings-grid">
+            <div class="loading">Loading buildings…</div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ CRAFTER RECIPES TAB ══ -->
+<div class="tab-panel" id="tab-crafters">
+    <div class="content">
+        <div class="sub-tabs" id="crafter-tabs"></div>
+        <div class="recipes-grid" id="recipes-grid">
+            <div class="loading">Loading recipes…</div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ LOOT TABLES TAB ══ -->
+<div class="tab-panel" id="tab-loot">
+    <div class="content">
+        <div class="sub-tabs" id="loot-source-tabs"></div>
+        <div class="loot-sub-tabs" id="loot-sub-tabs"></div>
+        <div id="loot-container">
+            <div class="loading">Loading loot tables…</div>
+        </div>
+    </div>
+</div>
+
+<footer>Made with love by Blu (Bludeuwedd)</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const { createClient } = supabase;
+const sb = createClient(
+    'https://lihxhwcrlnvsqpfqtggc.supabase.co',
+    'sb_publishable_OfZ9MzjXjDGime_xNJj7hA_Bi5-EQ8V'
+);
+
+// ─── State ───────────────────────────────────────
+let buildings = [];
+let crafterRecipes = [];
+let crafterInputs = [];
+let lootRows = [];
+
+let activeCat = 'All';
+let activeCrafter = null;
+let activeLootSource = null;
+let activeLootSub = null;
+
+// ─── Tab switching ────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+});
+
+// ─── BUILDINGS ───────────────────────────────────
+
+async function loadBuildings() {
+    const { data, error } = await sb.from('buildings').select('*').order('name');
+    if (error) { console.error(error); return; }
+    buildings = data;
+    renderBuildings();
+}
+
+function renderBuildings() {
+    const grid = document.getElementById('buildings-grid');
+    const list = activeCat === 'All' ? buildings : buildings.filter(b => b.category === activeCat);
+
+    if (!list.length) {
+        grid.innerHTML = '<div class="loading">No buildings found.</div>';
+        return;
+    }
+
+    grid.innerHTML = list.map(b => `
+        <div class="building-card">
+            <div class="building-name">${b.name}</div>
+            <div class="building-meta">
+                <span class="building-category">${b.category}</span>
+                ${pips(b.max_level)}
+            </div>
+            ${b.description ? `<div class="building-desc">${b.description}</div>` : ''}
+            ${b.unlocked_by_research ? `<div class="building-unlock">Requires research: ${b.unlocked_by_research}</div>` : ''}
+        </div>
+    `).join('');
+}
+
+function pips(max) {
+    let h = '<span class="level-pips">';
+    for (let i = 1; i <= 5; i++) h += `<span class="pip${i <= max ? ' on' : ''}"></span>`;
+    return h + '</span>';
+}
+
+// Category tab clicks
+document.getElementById('cat-tabs').addEventListener('click', e => {
+    const btn = e.target.closest('.sub-btn');
+    if (!btn) return;
+    document.querySelectorAll('#cat-tabs .sub-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat = btn.dataset.cat;
+    renderBuildings();
+});
+
+// ─── CRAFTER RECIPES ──────────────────────────────
+
+async function loadCrafterRecipes() {
+    const [rRes, iRes] = await Promise.all([
+        sb.from('crafter_recipes').select('*').order('name'),
+        sb.from('crafter_recipe_inputs').select('*')
+    ]);
+    if (rRes.error || iRes.error) { console.error(rRes.error || iRes.error); return; }
+    crafterRecipes = rRes.data;
+    crafterInputs = iRes.data;
+
+    const crafters = [...new Set(crafterRecipes.map(r => r.crafter))].sort();
+    activeCrafter = crafters[0] || null;
+
+    const tabsEl = document.getElementById('crafter-tabs');
+    tabsEl.innerHTML = crafters.map((c, i) => `
+        <button class="sub-btn${i === 0 ? ' active' : ''}" data-crafter="${c}">${c}</button>
+    `).join('');
+
+    tabsEl.addEventListener('click', e => {
+        const btn = e.target.closest('.sub-btn');
+        if (!btn) return;
+        document.querySelectorAll('#crafter-tabs .sub-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCrafter = btn.dataset.crafter;
+        renderCrafterRecipes();
+    });
+
+    renderCrafterRecipes();
+}
+
+function renderCrafterRecipes() {
+    const grid = document.getElementById('recipes-grid');
+    const list = crafterRecipes.filter(r => r.crafter === activeCrafter);
+
+    if (!list.length) {
+        grid.innerHTML = '<div class="loading">No recipes for this crafter.</div>';
+        return;
+    }
+
+    grid.innerHTML = list.map(r => {
+        const inputs = crafterInputs.filter(i => i.recipe_id === r.id);
+        return `
+            <div class="recipe-card">
+                <div class="recipe-name">${r.name}</div>
+                ${r.result ? `<div class="recipe-result">→ ${r.result}</div>` : ''}
+                <div class="recipe-meta">${r.crafter} · Min building level ${r.min_building_level}</div>
+                ${inputs.length ? `
+                    <ul class="recipe-inputs">
+                        ${inputs.map(i => `
+                            <li><span>${i.ingredient}</span><span class="qty">×${i.quantity}</span></li>
+                        `).join('')}
+                    </ul>
+                ` : ''}
+                ${r.research_required ? `<div class="recipe-research">Requires research: ${r.research_required}</div>` : ''}
+                ${r.notes ? `<div class="recipe-notes">${r.notes}</div>` : ''}
+            </div>
+        `;
+    }).join('');
+}
+
+// ─── LOOT TABLES ─────────────────────────────────
+
+async function loadLootTables() {
+    const { data, error } = await sb.from('loot_tables').select('*').order('source').order('source_detail').order('item');
+    if (error) { console.error(error); return; }
+    lootRows = data;
+
+    const sources = [...new Set(lootRows.map(r => r.source))].sort();
+    activeLootSource = sources[0];
+
+    const srcEl = document.getElementById('loot-source-tabs');
+    srcEl.innerHTML = sources.map((s, i) => `
+        <button class="sub-btn${i === 0 ? ' active' : ''}" data-source="${s}">${fmtSource(s)}</button>
+    `).join('');
+
+    srcEl.addEventListener('click', e => {
+        const btn = e.target.closest('.sub-btn');
+        if (!btn) return;
+        document.querySelectorAll('#loot-source-tabs .sub-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeLootSource = btn.dataset.source;
+        activeLootSub = null;
+        renderLootSubTabs();
+        renderLootTable();
+    });
+
+    renderLootSubTabs();
+    renderLootTable();
+}
+
+function fmtSource(s) {
+    return { sifter: 'Sifter', nether_mine: 'Nether Mine', miner: 'Miner', fisher: 'Fisher', enchanter: 'Enchanter' }[s] || s;
+}
+
+function fmtDetail(d, src) {
+    if (src === 'sifter') {
+        const [mesh, sub] = d.split('_mesh_');
+        return `${cap(mesh)} Mesh + ${cap(sub.replace(/_/g,' '))}`;
+    }
+    if (src === 'nether_mine') return d.replace('trip_level_', 'Trip Level ');
+    if (src === 'miner')       return d.replace('lucky_ore_level_', 'Lucky Ore Level ');
+    if (src === 'fisher')      return d.replace('bonus_level_', 'Bonus Level ');
+    if (src === 'enchanter')   return d.replace('level_', 'Level ');
+    return cap(d.replace(/_/g, ' '));
+}
+
+function cap(str) {
+    return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+function renderLootSubTabs() {
+    const el = document.getElementById('loot-sub-tabs');
+    const details = [...new Set(lootRows.filter(r => r.source === activeLootSource).map(r => r.source_detail))].sort();
+
+    if (details.length <= 1) {
+        el.innerHTML = '';
+        activeLootSub = details[0] || null;
+        return;
+    }
+
+    if (!activeLootSub || !details.includes(activeLootSub)) activeLootSub = details[0];
+
+    el.innerHTML = details.map(d => `
+        <button class="loot-sub-btn${d === activeLootSub ? ' active' : ''}" data-sub="${d}">
+            ${fmtDetail(d, activeLootSource)}
+        </button>
+    `).join('');
+
+    el.addEventListener('click', e => {
+        const btn = e.target.closest('.loot-sub-btn');
+        if (!btn) return;
+        el.querySelectorAll('.loot-sub-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeLootSub = btn.dataset.sub;
+        renderLootTable();
+    });
+}
+
+function renderLootTable() {
+    const container = document.getElementById('loot-container');
+    let rows = lootRows.filter(r => r.source === activeLootSource);
+    if (activeLootSub) rows = rows.filter(r => r.source_detail === activeLootSub);
+
+    if (!rows.length) {
+        container.innerHTML = '<div class="loading">No loot data found.</div>';
+        return;
+    }
+
+    const totalWeight = rows.reduce((s, r) => s + (r.weight || 0), 0);
+    const hasLevel = rows.some(r => r.min_building_level != null);
+
+    rows = [...rows].sort((a, b) => (b.weight || 0) - (a.weight || 0));
+
+    container.innerHTML = `
+        <table class="loot-table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Amount</th>
+                    ${hasLevel ? '<th>Min Level</th>' : ''}
+                    <th>Chance</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                ${rows.map(r => {
+                    const pct = totalWeight > 0 ? Math.round((r.weight / totalWeight) * 100) : 0;
+                    const amt = r.min_amount === r.max_amount ? r.min_amount : `${r.min_amount}–${r.max_amount}`;
+                    return `
+                        <tr>
+                            <td class="col-item">${r.item}</td>
+                            <td class="col-amt">${amt}</td>
+                            ${hasLevel ? `<td class="col-lvl">${r.min_building_level ?? '—'}</td>` : ''}
+                            <td class="col-pct">${pct}%</td>
+                            <td><div class="weight-bar"><div class="weight-fill" style="width:${pct}%"></div></div></td>
+                        </tr>
+                    `;
+                }).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+// ─── Init ─────────────────────────────────────────
+loadBuildings();
+loadCrafterRecipes();
+loadLootTables();
+</script>
+</body>
+</html>
