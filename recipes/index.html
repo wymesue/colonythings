@@ -9,226 +9,63 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --bg:#0a0e14;
-  --surface:#0f1520;
-  --card:#131d2e;
-  --border:#1e3048;
-  --text:#d8e8f0;
-  --muted:#5a7a90;
-  --accent:#7dbde8;
-  --gold:#c9a84c;
-  --green:#4a9e6a;
-  --red:#c0504a;
-  --amber:#c87d3a;
+  --bg:#0a0e14;--surface:#0f1520;--card:#0d1420;--border:#1e3048;
+  --text:#d8e8f0;--muted:#5a7a90;--accent:#7dbde8;--gold:#c9a84c;
+  --green:#4a9e6a;--red:#c0504a;--amber:#c87d3a;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Crimson Pro',Georgia,serif;
-  line-height:1.6;
-  min-height:100vh;
-}
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background:radial-gradient(ellipse 80% 50% at 50% -20%, rgba(125,189,232,.06) 0%, transparent 60%);
-  pointer-events:none;
-  z-index:0;
-}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',Georgia,serif;line-height:1.6;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(125,189,232,.06) 0%,transparent 60%);pointer-events:none;z-index:0;}
 .wrap{max-width:1300px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
-
-/* NAV */
-nav{
-  padding:20px 0;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid var(--border);
-  margin-bottom:40px;
-}
-.nav-logo{
-  font-family:'Cinzel',serif;
-  font-size:18px;
-  font-weight:700;
-  color:var(--accent);
-  letter-spacing:.5px;
-  text-decoration:none;
-}
+nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:40px;}
+.nav-logo{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--accent);letter-spacing:.5px;text-decoration:none}
 .nav-links{display:flex;gap:24px;list-style:none}
-.nav-links a{
-  font-size:14px;
-  color:var(--muted);
-  text-decoration:none;
-  transition:color .2s;
-}
+.nav-links a{font-size:14px;color:var(--muted);text-decoration:none;transition:color .2s}
 .nav-links a:hover{color:var(--text)}
 .nav-links a.active{color:var(--accent)}
-
-/* HEADER */
-.page-header{margin-bottom:32px}
-.page-eyebrow{
-  font-size:11px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  color:var(--gold);
-  font-family:'Cinzel',serif;
-  margin-bottom:8px;
-}
-.page-title{
-  font-family:'Cinzel',serif;
-  font-size:32px;
-  font-weight:700;
-  color:var(--text);
-  margin-bottom:6px;
-}
-.page-desc{
-  font-size:16px;
-  color:var(--muted);
-  font-style:italic;
-}
-
-/* FILTERS */
-.filters{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:32px;
-  align-items:center;
-}
-.filter-label{
-  font-size:13px;
-  color:var(--muted);
-  font-family:'Cinzel',serif;
-  letter-spacing:.5px;
-}
-.filter-btn{
-  padding:6px 14px;
-  border-radius:6px;
-  font-family:'Cinzel',serif;
-  font-size:12px;
-  font-weight:600;
-  letter-spacing:.3px;
-  cursor:pointer;
-  border:1px solid var(--border);
-  background:var(--card);
-  color:var(--muted);
-  transition:all .15s;
-}
+.page-header{margin-bottom:28px}
+.page-eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:8px}
+.page-title{font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:var(--text);margin-bottom:6px}
+.page-desc{font-size:16px;color:var(--muted);font-style:italic}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--muted);align-items:center;}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-dot{width:8px;height:8px;border-radius:999px}
+.legend-dot.base{background:var(--text)}
+.legend-dot.intermediate{background:var(--amber)}
+.legend-dot.biome{background:#7dbde8}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;align-items:center;}
+.filter-label{font-size:13px;color:var(--muted);font-family:'Cinzel',serif;letter-spacing:.5px}
+.filter-btn{padding:6px 14px;border-radius:6px;font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.3px;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--muted);transition:all .15s;}
 .filter-btn:hover{color:var(--text);border-color:#2a4060}
 .filter-btn.active{background:#1a2e45;color:var(--accent);border-color:var(--accent)}
 .filter-sep{width:1px;height:24px;background:var(--border)}
-
-/* LOADING */
-.loading{
-  text-align:center;
-  padding:60px;
-  color:var(--muted);
-  font-style:italic;
-  font-size:18px;
-}
-
-/* SECTION */
-.recipe-section{margin-bottom:48px}
-.section-hdr{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:16px;
-  padding-bottom:10px;
-  border-bottom:1px solid var(--border);
-}
-.section-hdr-name{
-  font-family:'Cinzel',serif;
-  font-size:18px;
-  font-weight:700;
-}
-.section-hdr-count{
-  font-size:12px;
-  color:var(--muted);
-  padding:2px 8px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:999px;
-}
-.lvl5-color{color:#4a9e6a}
-.lvl3-color{color:#c9a84c}
-.lvl1-color{color:#5a7a90}
-
-/* RECIPE GRID */
-.recipe-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-  gap:10px;
-}
-.recipe-card{
-  background:#060c14;
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:18px 20px;
-  transition:border-color .15s;
-}
+.loading{text-align:center;padding:60px;color:var(--muted);font-style:italic;font-size:18px}
+.recipe-section{margin-bottom:44px}
+.section-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.section-hdr-name{font-family:'Cinzel',serif;font-size:18px;font-weight:700}
+.section-hdr-count{font-size:12px;color:var(--muted);padding:2px 8px;background:var(--card);border:1px solid var(--border);border-radius:999px}
+.lvl5-color{color:#4a9e6a}.lvl3-color{color:#c9a84c}.lvl1-color{color:#5a7a90}
+.recipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
+.recipe-card{background:#070d16;border:1px solid var(--border);border-radius:10px;padding:16px 18px;transition:border-color .15s;}
 .recipe-card:hover{border-color:#2a4060}
 .recipe-card.lvl5{border-left:3px solid var(--green)}
 .recipe-card.lvl3{border-left:3px solid var(--gold)}
 .recipe-card.lvl1{border-left:3px solid var(--muted)}
-.recipe-name{
-  font-family:'Cinzel',serif;
-  font-size:14px;
-  font-weight:600;
-  color:var(--text);
-  margin-bottom:6px;
-  line-height:1.3;
-}
-.recipe-meta{
-  font-size:12px;
-  color:var(--muted);
-  margin-bottom:8px;
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-.crafter-badge{
-  padding:1px 6px;
-  border-radius:4px;
-  font-family:'Cinzel',serif;
-  font-size:10px;
-  font-weight:600;
-  letter-spacing:.3px;
-}
+.recipe-name{font-family:'Cinzel',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.3;}
+.recipe-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+.crafter-badge{padding:2px 7px;border-radius:4px;font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.3px;}
 .crafter-Hand{background:rgba(90,122,144,.15);color:#7dbde8;border:1px solid rgba(90,122,144,.3)}
 .crafter-Baker{background:rgba(201,168,76,.1);color:#c9a84c;border:1px solid rgba(201,168,76,.25)}
 .crafter-Chef{background:rgba(192,80,74,.1);color:#d47070;border:1px solid rgba(192,80,74,.25)}
-.recipe-ingredients{
-  font-size:14px;
-  color:var(--text);
-  line-height:1.6;
-}
-.recipe-ingredients strong{color:var(--accent)}
-.biome-note{
-  font-size:11px;
-  color:var(--amber);
-  margin-top:5px;
-  font-style:italic;
-}
-
-/* ERROR */
-.error-box{
-  padding:24px;
-  background:rgba(192,80,74,.08);
-  border:1px solid rgba(192,80,74,.3);
-  border-radius:10px;
-  color:var(--red);
-  font-size:15px;
-  text-align:center;
-}
-
-@media(max-width:600px){
-  nav{flex-direction:column;gap:12px}
-  .recipe-grid{grid-template-columns:1fr}
-  .filters{gap:6px}
-}
+.biome-tag{padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;font-family:'Cinzel',serif;letter-spacing:.3px;background:rgba(125,189,232,.08);color:var(--accent);border:1px solid rgba(125,189,232,.2);}
+.recipe-ingredients{font-size:14px;line-height:1.8;color:#b8d0e0}
+.ing-base{color:#c8dce8}
+.ing-intermediate{color:var(--amber)}
+.ing-biome{color:#7dbde8}
+.ing-count{color:var(--accent);font-weight:700}
+.error-box{padding:24px;background:rgba(192,80,74,.08);border:1px solid rgba(192,80,74,.3);border-radius:10px;color:var(--red);font-size:15px;text-align:center;}
+footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color:var(--muted);font-size:14px;margin-top:40px;}
+@media(max-width:600px){nav{flex-direction:column;gap:12px}.recipe-grid{grid-template-columns:1fr}.filters{gap:6px}}
 </style>
 </head>
 <body>
@@ -242,13 +79,17 @@ nav{
       <li><a href="/buildings">Buildings</a></li>
     </ul>
   </nav>
-
   <div class="page-header">
     <div class="page-eyebrow">Quick Reference</div>
     <div class="page-title">📜 Recipe Reference</div>
     <div class="page-desc">All food recipes at a glance — perfect for a second monitor while you play.</div>
   </div>
-
+  <div class="legend">
+    <span style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.5px;text-transform:uppercase">Legend:</span>
+    <span class="legend-item"><span class="legend-dot base"></span> Base ingredient</span>
+    <span class="legend-item"><span class="legend-dot intermediate"></span> <span style="color:var(--amber)">Crafted intermediate</span> (needs its own recipe)</span>
+    <span class="legend-item"><span class="legend-dot biome"></span> <span style="color:var(--accent)">Biome crop</span> (needs specific biome)</span>
+  </div>
   <div class="filters">
     <span class="filter-label">Level:</span>
     <button class="filter-btn active" data-filter="level" data-value="all">All</button>
@@ -262,128 +103,115 @@ nav{
     <button class="filter-btn" data-filter="crafter" data-value="Baker">Baker</button>
     <button class="filter-btn" data-filter="crafter" data-value="Chef">Chef</button>
   </div>
-
   <div id="content"><div class="loading">Loading recipes from the colony stores…</div></div>
+  <footer>
+    <p>Colony Things — a fan-made Minecolonies companion · Made with ♥ by <strong>Blu</strong> (Bludeuwedd)</p>
+  </footer>
 </div>
-
 <script>
-const SUPABASE_URL = 'https://lihxhwcrlnvsqpfqtggc.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_OfZ9MzjXjDGime_xNJj7hA_Bi5-EQ8V';
-
-const BIOME_NAMES = {
-  'all': 'All Biomes',
-  'temperate': 'Temperate',
-  'hot_dry': 'Hot & Dry',
-  'hot_humid': 'Hot & Humid',
-  'cold': 'Cold',
-};
-
-let allRecipes = [];
-let allIngredients = [];
-let activeLevel = 'all';
-let activeCrafter = 'all';
+const SUPABASE_URL='https://lihxhwcrlnvsqpfqtggc.supabase.co';
+const SUPABASE_KEY='sb_publishable_OfZ9MzjXjDGime_xNJj7hA_Bi5-EQ8V';
+const headers={'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`};
+let allRecipes=[],allIngredients=[],biomeCrops={},recipeNames=new Set();
+let activeLevel='all',activeCrafter='all';
 
 async function fetchData(){
-  try {
-    const [recipesRes, ingredientsRes] = await Promise.all([
-      fetch(`${SUPABASE_URL}/rest/v1/food_recipes?select=*&order=level.desc,name.asc`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-      }),
-      fetch(`${SUPABASE_URL}/rest/v1/food_ingredients?select=*`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-      })
+  try{
+    const[r1,r2,r3,r4]=await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/food_recipes?select=*&order=level.desc,name.asc`,{headers}),
+      fetch(`${SUPABASE_URL}/rest/v1/food_ingredients?select=*`,{headers}),
+      fetch(`${SUPABASE_URL}/rest/v1/biome_crops?select=*`,{headers}),
+      fetch(`${SUPABASE_URL}/rest/v1/biomes?select=*`,{headers}),
     ]);
-
-    if(!recipesRes.ok || !ingredientsRes.ok) throw new Error('Failed to fetch data');
-
-    allRecipes = await recipesRes.json();
-    allIngredients = await ingredientsRes.json();
+    allRecipes=await r1.json();
+    allIngredients=await r2.json();
+    const bcrops=await r3.json();
+    const biomes=await r4.json();
+    const biomeById=Object.fromEntries(biomes.map(b=>[b.id,b]));
+    bcrops.forEach(bc=>{
+      const b=biomeById[bc.biome_id];
+      if(b&&b.name!=='all') biomeCrops[bc.crop]=b.display_name;
+    });
+    allRecipes.forEach(r=>recipeNames.add(r.name));
     render();
-  } catch(e) {
-    document.getElementById('content').innerHTML = `
-      <div class="error-box">
-        ⚠️ Could not load recipes. Please try refreshing the page.<br>
-        <small style="opacity:.6;margin-top:6px;display:block">${e.message}</small>
-      </div>`;
+  }catch(e){
+    document.getElementById('content').innerHTML=`<div class="error-box">⚠️ Could not load recipes. Please try refreshing.<br><small style="opacity:.6;margin-top:6px;display:block">${e.message}</small></div>`;
   }
 }
 
-function getIngredients(recipeId){
-  return allIngredients.filter(i => i.recipe_id === recipeId);
+function getIngredients(id){return allIngredients.filter(i=>i.recipe_id===id)}
+
+function getBiomes(recipeId){
+  const visited=new Set(),biomes=new Set();
+  function traverse(rid){
+    if(visited.has(rid))return;
+    visited.add(rid);
+    getIngredients(rid).forEach(ing=>{
+      if(biomeCrops[ing.ingredient]) biomes.add(biomeCrops[ing.ingredient]);
+      const sub=allRecipes.find(r=>r.name===ing.ingredient);
+      if(sub) traverse(sub.id);
+    });
+  }
+  traverse(recipeId);
+  return[...biomes];
 }
 
-function formatIngredients(ings){
-  return ings.map(i => {
-    const qty = i.quantity > 1 ? `<strong>${i.quantity}×</strong> ` : '';
-    return `${qty}${i.ingredient}`;
-  }).join(', ');
+function formatIngs(recipeId){
+  return getIngredients(recipeId).map(ing=>{
+    const qty=ing.quantity>1?`<span class="ing-count">${ing.quantity}×</span> `:'';
+    const isInter=recipeNames.has(ing.ingredient);
+    const isBiome=!!biomeCrops[ing.ingredient];
+    const cls=isInter?'ing-intermediate':isBiome?'ing-biome':'ing-base';
+    return`<span class="${cls}">${qty}${ing.ingredient}</span>`;
+  }).join('<span style="color:#1e3048"> · </span>');
 }
 
 function render(){
-  let filtered = allRecipes.filter(r => {
-    if(activeLevel !== 'all' && String(r.level) !== activeLevel) return false;
-    if(activeCrafter !== 'all' && r.crafter !== activeCrafter) return false;
+  let filtered=allRecipes.filter(r=>{
+    if(activeLevel!=='all'&&String(r.level)!==activeLevel)return false;
+    if(activeCrafter!=='all'&&r.crafter!==activeCrafter)return false;
     return true;
   });
-
-  if(filtered.length === 0){
-    document.getElementById('content').innerHTML = '<div class="loading">No recipes match your filters.</div>';
-    return;
-  }
-
-  const levels = activeLevel === 'all' ? [5,3,1] : [parseInt(activeLevel)];
-  const levelInfo = {
-    5: {label:'Level 5 — Happy For Sure', cls:'lvl5', colorCls:'lvl5-color'},
-    3: {label:'Level 3 — Satisfied', cls:'lvl3', colorCls:'lvl3-color'},
-    1: {label:'Level 1 — Somewhat Acceptable', cls:'lvl1', colorCls:'lvl1-color'},
-  };
-
-  let html = '';
+  if(filtered.length===0){document.getElementById('content').innerHTML='<div class="loading">No recipes match your filters.</div>';return;}
+  const levels=activeLevel==='all'?[5,3,1]:[parseInt(activeLevel)];
+  const info={5:{label:'Level 5 — Happy For Sure',cls:'lvl5',cc:'lvl5-color'},3:{label:'Level 3 — Satisfied',cls:'lvl3',cc:'lvl3-color'},1:{label:'Level 1 — Somewhat Acceptable',cls:'lvl1',cc:'lvl1-color'}};
+  let html='';
   for(const lvl of levels){
-    const group = filtered.filter(r => r.level === lvl);
-    if(group.length === 0) continue;
-    const info = levelInfo[lvl];
-    html += `
-      <div class="recipe-section">
-        <div class="section-hdr">
-          <span class="section-hdr-name ${info.colorCls}">${info.label}</span>
-          <span class="section-hdr-count">${group.length} recipe${group.length!==1?'s':''}</span>
-        </div>
-        <div class="recipe-grid">
-          ${group.map(r => {
-            const ings = getIngredients(r.id);
-            const biomeNote = (r.biome_required && r.biome_required !== 'all') ? `Requires ${BIOME_NAMES[r.biome_required]||r.biome_required} biome` : '';
-            const notesText = r.notes ? r.notes : '';
-            return `
-              <div class="recipe-card ${info.cls}">
-                <div class="recipe-name">${r.name}</div>
-                <div class="recipe-meta">
-                  <span class="crafter-badge crafter-${r.crafter}">${r.crafter}</span>
-                </div>
-                <div class="recipe-ingredients">${formatIngredients(ings)}</div>
-                ${biomeNote ? `<div class="biome-note">🌍 ${biomeNote}</div>` : ''}
-                ${notesText ? `<div class="biome-note">💬 ${notesText}</div>` : ''}
-              </div>`;
-          }).join('')}
-        </div>
-      </div>`;
+    const group=filtered.filter(r=>r.level===lvl);
+    if(!group.length)continue;
+    const i=info[lvl];
+    html+=`<div class="recipe-section">
+      <div class="section-hdr">
+        <span class="section-hdr-name ${i.cc}">${i.label}</span>
+        <span class="section-hdr-count">${group.length} recipe${group.length!==1?'s':''}</span>
+      </div>
+      <div class="recipe-grid">
+        ${group.map(r=>{
+          const biomes=getBiomes(r.id);
+          return`<div class="recipe-card ${i.cls}">
+            <div class="recipe-name">${r.name}</div>
+            <div class="recipe-meta">
+              <span class="crafter-badge crafter-${r.crafter}">${r.crafter}</span>
+              ${biomes.map(b=>`<span class="biome-tag">🌍 ${b}</span>`).join('')}
+            </div>
+            <div class="recipe-ingredients">${formatIngs(r.id)}</div>
+            ${r.notes?`<div style="font-size:12px;color:var(--muted);margin-top:6px;font-style:italic">💬 ${r.notes}</div>`:''}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
   }
-
-  document.getElementById('content').innerHTML = html;
+  document.getElementById('content').innerHTML=html;
 }
 
-// Filters
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const filter = btn.dataset.filter;
-    const value = btn.dataset.value;
-    if(filter === 'level') activeLevel = value;
-    if(filter === 'crafter') activeCrafter = value;
-    document.querySelectorAll(`.filter-btn[data-filter="${filter}"]`).forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    render();
-  });
-});
+document.querySelectorAll('.filter-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  const f=btn.dataset.filter,v=btn.dataset.value;
+  if(f==='level')activeLevel=v;
+  if(f==='crafter')activeCrafter=v;
+  document.querySelectorAll(`.filter-btn[data-filter="${f}"]`).forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}));
 
 fetchData();
 </script>
