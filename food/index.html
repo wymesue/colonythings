@@ -3,219 +3,132 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>University Planner — Colony Things</title>
+<title>Food Planner — Colony Things</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg:#0a0e14;--surface:#0f1520;--card:#0d1420;--border:#1e3048;
-  --text:#d8e8f0;--muted:#5a7a90;--accent:#7dbde8;--gold:#c9a84c;
-  --green:#4a9e6a;--red:#c0504a;--amber:#c87d3a;
-  --civ:#4ade80;--com:#f87171;--tec:#fbbf24;
-  --c1:#64748b;--c2:#6366f1;--c3:#a855f7;--c4:#f59e0b;--c5:#ef4444;--c6:#10b981;
+  --bg:#0a0e14;--card:#0d1420;--border:#1e3048;--text:#d8e8f0;
+  --muted:#5a7a90;--accent:#7dbde8;--gold:#c9a84c;--green:#4a9e6a;
+  --red:#c0504a;--amber:#c87d3a;--dark:#070d16;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--bg);color:var(--text);min-height:100%;font-family:'Crimson Pro',Georgia,serif;line-height:1.5}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',Georgia,serif;line-height:1.6;min-height:100vh}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(125,189,232,.06) 0%,transparent 60%);pointer-events:none;z-index:0}
-.wrap{max-width:1480px;margin:0 auto;padding:0 22px;position:relative;z-index:1}
+.wrap{max-width:1400px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
 
-nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:0;}
+nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:28px}
 .nav-logo{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--accent);letter-spacing:.5px;text-decoration:none}
 .nav-links{display:flex;gap:24px;list-style:none}
 .nav-links a{font-size:14px;color:var(--muted);text-decoration:none;transition:color .2s}
 .nav-links a:hover{color:var(--text)}
 .nav-links a.active{color:var(--accent)}
 
-/* ── COLONY BAR ── */
-.colony-bar{
-  display:flex;align-items:center;justify-content:space-between;
-  background:#070f1a;border-bottom:1px solid var(--border);
-  padding:10px 0;margin-bottom:24px;gap:12px;
-}
-.colony-bar-info{display:flex;align-items:center;gap:10px}
-.colony-bar-icon{font-size:18px}
-.colony-bar-name{font-family:'Cinzel',serif;font-size:14px;color:var(--gold);font-weight:700}
-.colony-bar-code{font-size:12px;color:var(--muted);font-style:italic}
-.save-btn{
-  padding:8px 20px;border-radius:7px;
-  font-family:'Cinzel',serif;font-size:13px;font-weight:600;
-  background:var(--gold);color:#0a0e14;border:none;cursor:pointer;
-  transition:all .2s;letter-spacing:.3px;
-}
-.save-btn:hover{background:#d4b870;transform:translateY(-1px)}
-.save-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-
-/* ── SAVE DIALOG ── */
-.dialog-overlay{
-  position:fixed;inset:0;background:rgba(5,10,20,.75);
-  display:flex;align-items:center;justify-content:center;
-  z-index:100;opacity:0;pointer-events:none;transition:opacity .2s;
-}
-.dialog-overlay.show{opacity:1;pointer-events:all}
-.dialog{
-  background:#0d1420;border:1px solid var(--border);border-radius:12px;
-  padding:28px 32px;text-align:center;max-width:340px;width:90%;
-  transform:translateY(10px);transition:transform .2s;
-}
-.dialog-overlay.show .dialog{transform:translateY(0)}
-.dialog-icon{font-size:36px;margin-bottom:10px}
-.dialog-title{font-family:'Cinzel',serif;font-size:17px;color:var(--green);margin-bottom:6px;font-weight:700}
-.dialog-msg{font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.5}
-.dialog-close{
-  padding:8px 24px;border-radius:7px;font-family:'Cinzel',serif;
-  font-size:13px;font-weight:600;background:var(--accent);color:#0a0e14;
-  border:none;cursor:pointer;transition:background .2s;
-}
-.dialog-close:hover{background:#9acfee}
-
 .page-eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px}
 .page-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;color:var(--text);margin-bottom:4px}
-.page-desc{font-size:15px;color:#7a9ab0;font-style:italic;margin-bottom:18px}
+.page-desc{font-size:15px;color:#7a9ab0;font-style:italic;margin-bottom:20px}
 
-button{cursor:pointer;border:none;font-family:'Crimson Pro',serif}
+/* MAIN TABS */
+.tab-nav{display:flex;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:4px;width:fit-content;margin-bottom:24px}
+.tab-btn{padding:8px 22px;border-radius:7px;font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:.3px;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .15s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{background:#172840;color:var(--accent)}
+.tab-content{display:none}
+.tab-content.active{display:block}
 
-.top-nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
-.tnav{padding:8px 16px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:13px;font-weight:600;transition:all .15s;font-family:'Cinzel',serif}
-.tnav:hover{color:var(--text);border-color:#2a4060}
-.tnav.active[data-tree="civilian"]{border-color:var(--civ);color:var(--civ);background:rgba(74,222,128,.07)}
-.tnav.active[data-tree="combat"]{border-color:var(--com);color:var(--com);background:rgba(248,113,113,.07)}
-.tnav.active[data-tree="technology"]{border-color:var(--tec);color:var(--tec);background:rgba(251,191,36,.07)}
-.tnav.active[data-tree="buildings"]{border-color:#38bdf8;color:#38bdf8;background:rgba(56,189,248,.07)}
+/* SUB TABS */
+.sub-tab-nav{display:flex;gap:3px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:0}
+.sub-tab-btn{padding:6px 16px;border-radius:7px 7px 0 0;font-family:'Cinzel',serif;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;border-bottom:none;background:transparent;color:var(--muted);transition:all .15s;position:relative;bottom:-1px}
+.sub-tab-btn:hover{color:var(--text)}
+.sub-tab-btn.active{background:var(--dark);border-color:var(--border);color:var(--accent)}
+.sub-tab-content{display:none}
+.sub-tab-content.active{display:block}
 
-.view-tabs{display:flex;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:3px;gap:2px;width:fit-content;margin-bottom:14px}
-.vtab{padding:6px 18px;border-radius:7px;font-size:13px;font-weight:600;background:transparent;color:var(--muted);transition:all .15s;font-family:'Cinzel',serif}
-.vtab.active{background:#172840;color:var(--accent)}
-
-.badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:11px;font-weight:600;border:1px solid;font-family:'Cinzel',serif}
-.b1{color:var(--c1);border-color:var(--c1);background:rgba(100,116,139,.1)}
-.b2{color:var(--c2);border-color:var(--c2);background:rgba(99,102,241,.1)}
-.b3{color:var(--c3);border-color:var(--c3);background:rgba(168,85,247,.1)}
-.b4{color:var(--c4);border-color:var(--c4);background:rgba(245,158,11,.1)}
-.b5{color:var(--c5);border-color:var(--c5);background:rgba(239,68,68,.1)}
-.b6{color:var(--c6);border-color:var(--c6);background:rgba(16,185,129,.1)}
-.pill{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:999px;font-size:12.5px;background:var(--card);border:1px solid var(--border);margin:2px 3px 2px 0}
-
-.lb1{border:2px solid var(--c1)!important}
-.lb2{border:2px solid var(--c2)!important}
-.lb3{border:2px solid var(--c3)!important}
-.lb4{border:2px solid var(--c4)!important}
-.lb5{border:2px solid var(--c5)!important}
-.lb6{border:2px solid var(--c6)!important}
-
-.cards-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
-input[type="search"]{flex:1;min-width:160px;padding:7px 11px;border-radius:8px;border:1px solid var(--border);background:#060d18;color:var(--text);font-size:13px;font-family:'Crimson Pro',serif}
-select{padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:#060d18;color:var(--text);font-size:13px;cursor:pointer;font-family:'Crimson Pro',serif}
-.count-lbl{font-size:12px;color:var(--muted)}
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:11px}
-
-.level-section{margin-bottom:28px}
-.level-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--border)}
-.level-hdr-text{font-size:16px;font-weight:700;font-family:'Cinzel',serif}
-.level-hdr-count{font-size:12px;color:var(--muted);padding:2px 8px;background:var(--card);border:1px solid var(--border);border-radius:999px}
-
-.rcard{background:#070d16;border:2px solid var(--border);border-radius:10px;padding:13px;position:relative;transition:background .2s}
-.rcard:hover{filter:brightness(1.07)}
-.rcard.s-finished{background:rgba(74,222,128,.07)}
-.rcard.s-materials{background:rgba(251,191,36,.07)}
-.rcard.s-plan{background:rgba(29,78,216,.05)}
-.rcard.unavailable{opacity:0.35;filter:grayscale(0.5)}
-
-.lock-overlay{position:absolute;inset:0;border-radius:8px;background:rgba(5,10,20,.28);pointer-events:none;display:flex;align-items:flex-start;justify-content:flex-end;padding:7px;z-index:5}
-.lock-overlay span{font-size:14px;line-height:1;background:rgba(5,10,20,.6);border-radius:4px;padding:2px 4px}
-.unavail-overlay{position:absolute;inset:0;border-radius:8px;background:rgba(30,5,5,.35);pointer-events:none;display:flex;align-items:flex-start;justify-content:flex-end;padding:7px;z-index:5}
-.unavail-overlay span{font-size:14px;line-height:1;background:rgba(30,5,5,.7);border-radius:4px;padding:2px 4px}
-
-.rname{font-size:15px;font-weight:700;margin-bottom:4px;padding-right:8px;display:flex;align-items:flex-start;gap:6px;font-family:'Cinzel',serif}
-.rname span{flex:1;line-height:1.3}
-.reff{font-size:13px;color:#9ab8cc;margin:4px 0 6px}
-.rmeta{font-size:12.5px;color:#8aabbf;margin:2px 0;font-weight:700;font-family:'Cinzel',serif}
-.rmeta .dim{font-weight:500;font-style:italic;color:#7a9ab0}
-.rcosts{margin-top:7px;display:flex;flex-wrap:wrap}
-.sbrow{display:flex;gap:5px;margin-top:10px}
-.sb{flex:1;padding:5px 4px;border-radius:6px;font-size:11.5px;font-weight:600;background:#0d1e30;color:var(--muted);border:1px solid var(--border);transition:all .15s;font-family:'Cinzel',serif}
-.sb:hover{background:#132840;color:var(--text)}
-.sb.active-plan{background:#1a3360;color:#7dd3fc;border-color:#1d4ed8}
-.sb.active-mat{background:#2a1f00;color:#fbbf24;border-color:#92400e}
-.sb.active-done{background:#052e16;color:#4ade80;border-color:#166534}
-
-.plan-badge{font-size:11px;padding:1px 6px;border-radius:999px;background:#1d4ed8;color:#bfdbfe;margin-left:4px;display:none}
-
-.plan-empty{text-align:center;padding:32px;color:var(--muted);font-size:14px;background:var(--card);border:1px dashed var(--border);border-radius:10px}
-.plan-chain{background:#070d16;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
-.pchain-hdr{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;font-family:'Cinzel',serif}
-.pstep{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;border-top:1px solid var(--border)}
-.pstep.prereq{color:var(--muted);font-size:12px}
-.pstep-meta{margin-left:auto;font-size:11px;color:#2d4560;padding-left:6px;white-space:nowrap}
-.rm-btn{font-size:11px;padding:2px 8px;border-radius:5px;background:#7f1d1d;color:#fca5a5;border:none;cursor:pointer;font-family:'Cinzel',serif}
-.rm-btn:hover{background:#991b1b}
-.totals-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-.tcrd{background:#070d16;border:1px solid var(--border);border-radius:10px;padding:14px}
-.tcrd h3{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;font-family:'Cinzel',serif}
-.ichip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:var(--card);border:1px solid var(--border);border-radius:7px;font-size:13px;margin:3px}
-.ichip .cnt{font-weight:800;color:var(--accent)}
-.brow{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px}
-.brow:last-child{border-bottom:none}
-.blvl{font-weight:700;color:var(--accent)}
-.clear-btn{margin-top:12px;width:100%;padding:10px;border-radius:8px;font-size:14px;font-weight:600;background:#7f1d1d;color:#fca5a5;border:none;cursor:pointer;font-family:'Cinzel',serif}
-.clear-btn:hover{background:#991b1b}
-
-.bld-section{margin-bottom:24px}
-.bld-cat{font-size:15px;font-weight:700;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);font-family:'Cinzel',serif}
-.bld-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:8px}
-.bld-card{background:#070d16;border:1px solid var(--border);border-radius:9px;padding:11px}
-.bld-name{font-size:13px;font-weight:700;margin-bottom:8px;line-height:1.3;color:var(--text);font-family:'Cinzel',serif}
-.lvl-btns{display:flex;gap:3px;flex-wrap:wrap}
-.lvl-btn{width:30px;height:28px;border-radius:5px;font-size:12px;font-weight:600;background:#0a1520;color:var(--muted);border:1px solid var(--border);transition:all .15s;font-family:'Cinzel',serif}
-.lvl-btn:hover{background:#132840;color:var(--text)}
-.lvl-btn.active{background:#172e50;color:var(--accent);border-color:#1d4ed8}
-.lvl-btn.active.lv0{background:#1a0808;color:#f87171;border-color:#7f1d1d}
-
+/* LOADING */
 .loading{text-align:center;padding:60px;color:var(--muted);font-style:italic;font-size:18px}
 .error-box{padding:24px;background:rgba(192,80,74,.08);border:1px solid rgba(192,80,74,.3);border-radius:10px;color:var(--red);font-size:15px;text-align:center}
 
-/* TREE */
-.tree-layout{display:flex;gap:12px;align-items:flex-start}
-#tree-wrap{flex:1;min-width:0;position:relative;overflow:auto;max-height:620px;border:1px solid var(--border);border-radius:10px;background:#050c16}
-#tree-svg{position:absolute;top:0;left:0;pointer-events:none;overflow:visible}
-#tree-cols{position:relative}
-.tcol-hdr{position:absolute;background:rgba(5,12,22,.95);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;font-family:'Cinzel',serif}
-.tnode{position:absolute;background:#0d1525;border-radius:8px;padding:7px 9px;cursor:pointer;transition:all .15s;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
-.tnode:hover{filter:brightness(1.15)}
-.tnode.selected{box-shadow:0 0 0 2px var(--accent)}
-.tnode-name{font-size:11px;font-weight:700;line-height:1.3;color:var(--text);font-family:'Cinzel',serif}
-.tnode-eff{font-size:9.5px;color:#7a9ab0;line-height:1.3;margin-top:2px}
-.tnode-status{display:flex;align-items:center;gap:4px;margin-top:4px}
-.tnode-dot{width:7px;height:7px;border-radius:999px;background:#1a2d45;flex-shrink:0}
-.tnode-dot.s-plan{background:#3b82f6}
-.tnode-dot.s-materials{background:#f59e0b}
-.tnode-dot.s-finished{background:#4ade80}
-.tnode.s-finished{background:rgba(74,222,128,.08)!important}
-.tnode.s-materials{background:rgba(251,191,36,.07)!important}
-.tnode.s-plan{background:rgba(29,78,216,.07)!important}
-.tnode.unavailable{opacity:0.3;filter:grayscale(0.6)}
-.tnode-lock{position:absolute;top:4px;right:5px;font-size:10px;background:rgba(5,10,20,.6);border-radius:3px;padding:1px 3px}
+/* BIOME TAB */
+.biome-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:24px}
+.biome-card{background:var(--dark);border:2px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:all .2s;user-select:none}
+.biome-card:hover{border-color:#2a4060;filter:brightness(1.05)}
+.biome-card.selected{border-color:var(--accent);background:rgba(125,189,232,.06)}
+.biome-card.selected .biome-check{opacity:1}
+.biome-name{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+.biome-check{opacity:0;color:var(--green);transition:opacity .2s;font-size:18px}
+.biome-crop-tag{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(125,189,232,.08);border:1px solid rgba(125,189,232,.15);color:var(--accent);font-size:12px;margin:2px 3px 2px 0}
+.biome-crop-tag.have{background:rgba(74,158,106,.15);border-color:rgba(74,158,106,.3);color:var(--green)}
+.universal-box{background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px}
+.universal-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px;letter-spacing:.5px}
 
-/* DETAIL PANEL */
-#detail-panel{width:270px;flex-shrink:0;background:#070d16;border:1px solid var(--border);border-radius:10px;padding:15px;display:none;position:sticky;top:0}
-.dp-name{font-size:15px;font-weight:800;margin-bottom:5px;line-height:1.3;font-family:'Cinzel',serif}
-.dp-eff{font-size:13px;color:#9ab8cc;margin:7px 0}
-.dp-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:10px 0 4px;font-family:'Cinzel',serif}
-.dp-meta{font-size:12px;color:#8aabbf;font-weight:700;padding:2px 0}
-.dp-costs{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}
-.dp-sbrow{display:flex;gap:4px;margin-top:11px}
-.dp-sb{flex:1;padding:7px 4px;border-radius:7px;font-size:12px;font-weight:700;background:#0d1e30;color:var(--muted);border:1px solid var(--border);transition:all .15s;font-family:'Cinzel',serif}
-.dp-sb.active-plan{background:#1a3360;color:#7dd3fc;border-color:#1d4ed8}
-.dp-sb.active-mat{background:#2a1f00;color:#fbbf24;border-color:#92400e}
-.dp-sb.active-done{background:#052e16;color:#4ade80;border-color:#166534}
+/* AVAILABLE CROPS BOX */
+.have-crops-box{background:rgba(74,158,106,.08);border:1px solid rgba(74,158,106,.25);border-radius:10px;padding:14px;margin-bottom:16px}
+.have-crops-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px;letter-spacing:.5px}
+.have-crops-empty{font-size:13px;color:var(--muted);font-style:italic}
+
+/* INGREDIENTS */
+.ing-box{background:var(--dark);border:1px solid var(--border);border-radius:0 10px 10px 10px;padding:16px}
+.ing-list{display:flex;flex-direction:column;gap:4px}
+.ing-row{display:flex;align-items:center;gap:10px;padding:5px 8px;border-radius:6px;cursor:pointer;transition:background .15s}
+.ing-row:hover{background:rgba(125,189,232,.05)}
+.ing-row input[type=checkbox]{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.ing-row label{font-size:14px;color:#b8d0e0;cursor:pointer;flex:1}
+.ing-row.locked-ing{opacity:.4;pointer-events:none}
+.ing-row.locked-ing.available{opacity:1}
+.ing-note{font-size:11px;color:var(--muted);font-style:italic;margin-left:4px}
+.ing-cat-note{font-size:12px;color:var(--muted);font-style:italic;margin-bottom:10px}
+
+/* MEALS */
+.meals-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
+.meal-section{margin-bottom:28px}
+.meal-section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.meal-section-name{font-family:'Cinzel',serif;font-size:17px;font-weight:700}
+.meal-section-count{font-size:12px;color:var(--muted);padding:2px 8px;background:var(--card);border:1px solid var(--border);border-radius:999px}
+.lvl5-color{color:#4a9e6a}.lvl3-color{color:#c9a84c}.lvl1-color{color:#5a7a90}
+.meals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.meal-card{background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color .15s}
+.meal-card:hover{border-color:#2a4060}
+.meal-card.lvl5{border-left:3px solid var(--green)}
+.meal-card.lvl3{border-left:3px solid var(--gold)}
+.meal-card.lvl1{border-left:3px solid var(--muted)}
+.meal-name{font-family:'Cinzel',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+.meal-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.crafter-badge{padding:2px 6px;border-radius:4px;font-family:'Cinzel',serif;font-size:10px;font-weight:600}
+.crafter-Hand{background:rgba(90,122,144,.15);color:#7dbde8;border:1px solid rgba(90,122,144,.3)}
+.crafter-Baker{background:rgba(201,168,76,.1);color:#c9a84c;border:1px solid rgba(201,168,76,.25)}
+.crafter-Chef{background:rgba(192,80,74,.1);color:#d47070;border:1px solid rgba(192,80,74,.25)}
+.biome-tag{padding:2px 6px;border-radius:4px;font-size:10px;font-family:'Cinzel',serif;background:rgba(125,189,232,.08);color:var(--accent);border:1px solid rgba(125,189,232,.2)}
+.meal-ings{font-size:13px;color:#b8d0e0;line-height:1.8;margin-bottom:8px}
+.ing-base{color:#c8dce8}
+.ing-inter{color:var(--amber)}
+.ing-biome{color:var(--accent)}
+.ing-missing{color:var(--red);font-weight:600}
+.ing-count{color:var(--accent);font-weight:700}
+.plan-btn{width:100%;padding:6px;border-radius:6px;font-family:'Cinzel',serif;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:#0d1e30;color:var(--muted);transition:all .15s}
+.plan-btn:hover{background:#132840;color:var(--text)}
+.plan-btn.planned{background:#052e16;color:#4ade80;border-color:#166534}
+.no-meals{text-align:center;padding:40px;color:var(--muted);font-style:italic;background:var(--dark);border:1px dashed var(--border);border-radius:10px}
+
+/* PLANNER PANEL */
+.planner-panel{background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:16px;position:sticky;top:20px}
+.planner-title{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.planner-empty{font-size:13px;color:var(--muted);font-style:italic;text-align:center;padding:20px 0}
+.planner-item{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.planner-item:last-child{border-bottom:none}
+.planner-remove{background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding:0 4px}
+.planner-totals{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.planner-totals-title{font-family:'Cinzel',serif;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.ing-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--card);border:1px solid var(--border);border-radius:6px;font-size:12px;margin:2px}
+.ing-chip .cnt{font-weight:700;color:var(--accent)}
+.clear-all{width:100%;margin-top:10px;padding:7px;border-radius:6px;font-family:'Cinzel',serif;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #7f1d1d;background:#1a0808;color:#fca5a5;transition:all .15s}
+.clear-all:hover{background:#7f1d1d}
 
 footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color:var(--muted);font-size:14px;margin-top:40px}
 
-@media(max-width:800px){
-  .cards-grid,.bld-grid{grid-template-columns:1fr}
-  .totals-grid{grid-template-columns:1fr}
+@media(max-width:900px){
+  .meals-layout{grid-template-columns:1fr}
   nav{flex-direction:column;gap:12px}
-  .colony-bar{flex-direction:column;align-items:flex-start;gap:8px}
 }
 </style>
 </head>
@@ -224,335 +137,152 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
   <nav>
     <a href="/" class="nav-logo">Colony Things</a>
     <ul class="nav-links">
-      <li><a href="/university" class="active">University</a></li>
-      <li><a href="/food">Food</a></li>
+      <li><a href="/university">University</a></li>
+      <li><a href="/food" class="active">Food</a></li>
       <li><a href="/recipes">Recipes</a></li>
       <li><a href="/buildings">Buildings</a></li>
     </ul>
   </nav>
 
-  <!-- COLONY BAR (shown only if code in sessionStorage) -->
-  <div class="colony-bar" id="colony-bar" style="display:none">
-    <div class="colony-bar-info">
-      <span class="colony-bar-icon">🏰</span>
-      <div>
-        <div class="colony-bar-name" id="colony-bar-name"></div>
-        <div class="colony-bar-code" id="colony-bar-code"></div>
-      </div>
-    </div>
-    <button class="save-btn" id="save-btn" onclick="saveColony()">💾 Save Progress</button>
-  </div>
+  <div class="page-eyebrow">Planning Tool</div>
+  <div class="page-title">🍖 Food Planner</div>
+  <div class="page-desc">Set your biomes and ingredients to see what your colony can cook.</div>
 
-  <div style="margin-top:24px">
-    <div class="page-eyebrow">Planning Tool</div>
-    <div class="page-title">🎓 University Research Planner</div>
-    <div class="page-desc">Set your buildings · Track progress · Plan your research path</div>
-  </div>
-
-  <div id="app-loading" class="loading">Loading research data from the colony archives…</div>
+  <div id="app-loading" class="loading">Loading food data from the colony kitchen…</div>
   <div id="app" style="display:none">
-    <div class="top-nav">
-      <button class="tnav active" data-tree="civilian">🏘️ Civilian</button>
-      <button class="tnav" data-tree="combat">⚔️ Combat</button>
-      <button class="tnav" data-tree="technology">⚙️ Technology</button>
-      <button class="tnav" data-tree="buildings">🏗️ Buildings</button>
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="biomes">🌍 Biomes</button>
+      <button class="tab-btn" data-tab="ingredients">🧺 Ingredients</button>
+      <button class="tab-btn" data-tab="meals">🍖 Meals</button>
     </div>
 
-    <div class="view-tabs" id="view-tabs">
-      <button class="vtab active" data-view="cards">📋 Cards</button>
-      <button class="vtab" data-view="tree">🌿 Tree</button>
-      <button class="vtab" data-view="planner">📌 Planner<span class="plan-badge" id="plan-badge">0</span></button>
-    </div>
-
-    <div id="cards-view">
-      <div class="cards-top">
-        <input type="search" id="search" placeholder="Search name, effect, items…"/>
-        <select id="col-filter">
-          <option value="">All University Levels</option>
-          <option value="1">Uni Level 1</option>
-          <option value="2">Uni Level 2</option>
-          <option value="3">Uni Level 3</option>
-          <option value="4">Uni Level 4</option>
-          <option value="5">Uni Level 5</option>
-          <option value="6">Level 6 — Exclusive</option>
-        </select>
-        <span class="count-lbl" id="cards-count"></span>
+    <!-- BIOMES TAB -->
+    <div class="tab-content active" id="tab-biomes">
+      <div class="universal-box">
+        <div class="universal-title">🌿 Universal Crops — Available in All Biomes</div>
+        <div id="universal-crops"></div>
       </div>
-      <div id="cards-grid" class="cards-grid"></div>
+      <div class="biome-grid" id="biome-grid"></div>
     </div>
 
-    <div id="tree-view" style="display:none">
-      <div class="tree-layout">
-        <div id="tree-wrap">
-          <svg id="tree-svg"></svg>
-          <div id="tree-cols"></div>
+    <!-- INGREDIENTS TAB -->
+    <div class="tab-content" id="tab-ingredients">
+      <div class="sub-tab-nav" id="ing-sub-nav">
+        <button class="sub-tab-btn active" data-sub="biome-crops">🌍 Biome Crops</button>
+        <button class="sub-tab-btn" data-sub="animal">🐄 Animal Products</button>
+        <button class="sub-tab-btn" data-sub="vanilla">🥕 Vanilla</button>
+        <button class="sub-tab-btn" data-sub="always">✅ Always Available</button>
+      </div>
+
+      <div class="sub-tab-content active" id="sub-biome-crops">
+        <div class="have-crops-box" id="have-crops-box">
+          <div class="have-crops-title">✅ Crops You Have</div>
+          <div id="have-crops-list"><div class="have-crops-empty">No biomes selected yet — go to the Biomes tab!</div></div>
         </div>
-        <div id="detail-panel">
-          <div class="dp-name" id="dp-name"></div>
-          <div id="dp-badges" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px"></div>
-          <div class="dp-eff" id="dp-eff"></div>
-          <div class="dp-lbl">Prerequisite</div>
-          <div id="dp-prereq" style="font-size:12px;color:#7a9ab0;font-style:italic;padding:2px 0"></div>
-          <div class="dp-lbl">Building Requirements</div>
-          <div id="dp-breqs"></div>
-          <div class="dp-lbl">Items Needed</div>
-          <div class="dp-costs" id="dp-costs"></div>
-          <div class="dp-sbrow">
-            <button class="dp-sb" id="dp-plan">＋ Plan</button>
-            <button class="dp-sb" id="dp-mat">📦 Mat</button>
-            <button class="dp-sb" id="dp-done">✅ Done</button>
+        <div class="ing-box">
+          <div class="ing-cat-note">These are controlled by your biome selections. Go to the 🌍 Biomes tab to change them.</div>
+          <div class="ing-list" id="ing-biome-list"></div>
+        </div>
+      </div>
+
+      <div class="sub-tab-content" id="sub-animal">
+        <div class="ing-box">
+          <div class="ing-cat-note">From your animal farms, fisher, and apiary.</div>
+          <div class="ing-list" id="ing-animal-list"></div>
+        </div>
+      </div>
+
+      <div class="sub-tab-content" id="sub-vanilla">
+        <div class="ing-box">
+          <div class="ing-cat-note">Standard Minecraft ingredients available from farming or gathering.</div>
+          <div class="ing-list" id="ing-vanilla-list"></div>
+        </div>
+      </div>
+
+      <div class="sub-tab-content" id="sub-always">
+        <div class="ing-box">
+          <div class="ing-cat-note">These are always available — pre-checked for you.</div>
+          <div class="ing-list" id="ing-always-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEALS TAB -->
+    <div class="tab-content" id="tab-meals">
+      <div class="meals-layout">
+        <div class="meals-main">
+          <div class="sub-tab-nav" id="meals-sub-nav">
+            <button class="sub-tab-btn active" data-sub="available">✅ Available <span id="avail-count" style="font-size:10px;margin-left:3px"></span></button>
+            <button class="sub-tab-btn" data-sub="notyet">🧙 Not Yet <span id="notyet-count" style="font-size:10px;margin-left:3px"></span></button>
+          </div>
+          <div class="sub-tab-content active" id="sub-available">
+            <div id="meals-available"></div>
+          </div>
+          <div class="sub-tab-content" id="sub-notyet">
+            <div id="meals-notyet"></div>
           </div>
         </div>
-      </div>
-      <div style="font-size:11px;color:#1e3248;margin-top:7px">Click a node to see details · 🔒 = locked</div>
-    </div>
-
-    <div id="planner-view" style="display:none">
-      <div class="plan-empty" id="plan-empty">
-        No researches in your plan yet.<br>
-        <span style="font-size:12px;color:#243548;display:block;margin-top:5px">Browse Cards and click "＋ Plan"</span>
-      </div>
-      <div id="plan-content" style="display:none">
-        <div id="plan-chains"></div>
-        <div class="totals-grid">
-          <div class="tcrd"><h3>📦 Total Items Needed</h3><div id="plan-items"></div></div>
-          <div class="tcrd"><h3>🏗️ Buildings Required</h3><div id="plan-buildings"></div></div>
+        <div class="planner-panel">
+          <div class="planner-title">
+            📌 Meal Plan
+            <span id="plan-count" style="font-size:12px;color:var(--muted)">0 meals</span>
+          </div>
+          <div id="planner-list"><div class="planner-empty">No meals planned yet</div></div>
+          <div class="planner-totals" id="planner-totals" style="display:none">
+            <div class="planner-totals-title">📦 Total Ingredients</div>
+            <div id="planner-ings"></div>
+          </div>
+          <button class="clear-all" id="clear-all" style="display:none">🗑️ Clear Plan</button>
         </div>
-        <button class="clear-btn" id="clear-btn">🗑️ Clear Planner</button>
       </div>
-    </div>
-
-    <div id="buildings-view" style="display:none">
-      <div style="font-size:13px;color:var(--muted);margin-bottom:18px">
-        Set your current building levels. Research requiring buildings you don't have shows a 🔒.
-        <strong style="color:var(--text)">Don't forget to set your University level</strong> — it gates which research columns you can access.
-      </div>
-      <div id="bld-content"></div>
     </div>
   </div>
 
-  <div id="app-error" style="display:none" class="error-box">⚠️ Could not load research data. Please try refreshing.</div>
+  <div id="app-error" style="display:none" class="error-box">⚠️ Could not load food data. Please try refreshing.</div>
 
   <footer>
     <p>Colony Things — a fan-made Minecolonies companion · Made with ♥ by <strong>Blu</strong> (Bludeuwedd)</p>
   </footer>
 </div>
 
-<!-- SAVE DIALOG -->
-<div class="dialog-overlay" id="save-dialog">
-  <div class="dialog">
-    <div class="dialog-icon">✅</div>
-    <div class="dialog-title">Progress Saved</div>
-    <div class="dialog-msg" id="dialog-msg">Your colony progress has been saved.</div>
-    <button class="dialog-close" onclick="closeDialog()">OK</button>
-  </div>
-</div>
-
 <script>
 const SUPABASE_URL='https://lihxhwcrlnvsqpfqtggc.supabase.co';
 const SUPABASE_KEY='sb_publishable_OfZ9MzjXjDGime_xNJj7hA_Bi5-EQ8V';
-const headers={'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json'};
+const H={'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`};
 
-// ── COLONY SESSION ────────────────────────────────
-const COLONY_CODE = sessionStorage.getItem('colonyCode') || null;
-const COLONY_NAME = sessionStorage.getItem('colonyName') || null;
+let biomes=[],biomeCropsData=[],recipes=[],ingredients=[];
+let biomeById={},cropToBiome={};
+let recipeNames=new Set();
 
-// ── DATA ──────────────────────────────────────────
-let R=[],costs=[],breqs=[];
-let byId={};
+const selectedBiomes=new Set(['all']);
+const checkedIngs=new Set(['Large Water Bottle','Bowl','Stick','Large Milk Bottle']);
+const plannedMeals=new Set();
+const planData={};
 
-// ── STATE ─────────────────────────────────────────
-let currentTree='civilian',currentView='cards';
-const planSet=new Set(),statusMap={},bldLevels={};
-const getStatus=id=>statusMap[id]||null;
-const setStatus=(id,s)=>{statusMap[id]=statusMap[id]===s?null:s;renderAll()};
-const togglePlan=id=>{planSet.has(id)?planSet.delete(id):planSet.add(id);renderAll()};
-const getBld=k=>bldLevels[k]||0;
-const setBld=(k,l)=>{bldLevels[k]=l;renderAll()};
+const ANIMAL_INGS=['Large Milk Bottle','Beef','Porkchop','Mutton','Chicken','Rabbit','Egg','Salmon','Cod','Honey Bottle'];
+const VANILLA_INGS=['Potato','Carrot','Beetroot','Apple','Sweet Berries','Sugar','Brown Mushroom','Kelp','Dried Kelp','Pumpkin'];
+const ALWAYS_INGS=['Large Water Bottle','Bowl','Stick'];
 
-// ── COLONY BAR ────────────────────────────────────
-function initColonyBar(){
-  if(!COLONY_CODE) return;
-  document.getElementById('colony-bar').style.display='flex';
-  document.getElementById('colony-bar-name').textContent=COLONY_NAME||'My Colony';
-  document.getElementById('colony-bar-code').textContent=COLONY_CODE;
-}
-
-// ── LOAD COLONY DATA ──────────────────────────────
-async function loadColonyData(){
-  if(!COLONY_CODE) return;
-  try{
-    const res=await fetch(`${SUPABASE_URL}/rest/v1/colony_saves?colony_code=eq.${encodeURIComponent(COLONY_CODE)}&select=save_data`,{headers});
-    const rows=await res.json();
-    if(!rows||!rows.length||!rows[0].save_data) return;
-    const sd=rows[0].save_data;
-
-    // Restore building levels
-    if(sd.buildings){
-      Object.entries(sd.buildings).forEach(([k,v])=>{ bldLevels[k]=v; });
-    }
-
-    // Restore research status and plan
-    if(sd.research){
-      Object.entries(sd.research).forEach(([idStr,status])=>{
-        const id=parseInt(idStr);
-        if(status==='plan') planSet.add(id);
-        else if(status==='materials'||status==='finished') statusMap[id]=status;
-      });
-    }
-
-    renderAll();
-  }catch(e){
-    console.error('Failed to load colony data',e);
-  }
-}
-
-// ── SAVE COLONY DATA ──────────────────────────────
-async function saveColony(){
-  if(!COLONY_CODE) return;
-  const btn=document.getElementById('save-btn');
-  btn.disabled=true;
-  btn.textContent='Saving…';
-
-  // Build research map — merge planSet and statusMap
-  const research={};
-  for(const id of planSet) research[id]='plan';
-  for(const[id,status] of Object.entries(statusMap)){
-    if(status) research[id]=status; // overwrite plan with materials/finished if set
-  }
-
-  const saveData={
-    buildings:{...bldLevels},
-    research,
-  };
-
-  try{
-    // Fetch existing save_data first to preserve biomes/ingredients/meals from food planner
-    const getRes=await fetch(`${SUPABASE_URL}/rest/v1/colony_saves?colony_code=eq.${encodeURIComponent(COLONY_CODE)}&select=save_data`,{headers});
-    const existing=await getRes.json();
-    const existingSd=(existing&&existing[0]&&existing[0].save_data)||{};
-
-    const merged={
-      ...existingSd,
-      buildings:saveData.buildings,
-      research:saveData.research,
-    };
-
-    const patchRes=await fetch(`${SUPABASE_URL}/rest/v1/colony_saves?colony_code=eq.${encodeURIComponent(COLONY_CODE)}`,{
-      method:'PATCH',
-      headers:{...headers,'Prefer':'return=minimal'},
-      body:JSON.stringify({save_data:merged,last_accessed:new Date().toISOString()})
-    });
-
-    btn.disabled=false;
-    btn.textContent='💾 Save Progress';
-
-    if(patchRes.ok){
-      document.getElementById('dialog-msg').textContent=`Building levels and research progress saved for ${COLONY_NAME||'your colony'}.`;
-      document.getElementById('save-dialog').classList.add('show');
-    }else{
-      alert('Save failed. Please try again.');
-    }
-  }catch(e){
-    console.error('Save error',e);
-    btn.disabled=false;
-    btn.textContent='💾 Save Progress';
-    alert('Save failed. Please check your connection.');
-  }
-}
-
-function closeDialog(){
-  document.getElementById('save-dialog').classList.remove('show');
-}
-
-// Close dialog on overlay click
-document.getElementById('save-dialog').addEventListener('click',function(e){
-  if(e.target===this) closeDialog();
-});
-
-// ── ITEM EMOJIS ───────────────────────────────────
-const EMO={
-  'Iron Ingot':'🩶','Block of Iron':'🔲','Iron Ore':'⛏️','Any Iron Ore':'⛏️',
-  'Gold Ingot':'🟡','Gold Ore':'🟡','Any Gold Ore':'🟡',
-  'Leather':'🟤','Rotten Flesh':'🥩','Bone':'🦴','Bone Meal':'🦴',
-  'Spider Eye':'👁️','Arrow':'🏹','Flint':'⬛','Shield':'🛡️','Bow':'🏹',
-  'Diamond':'💎','Any Diamond Ore':'💎','Diamond Axe':'🪓','Enchanted Book':'📖',
-  'Emerald':'💚','Redstone Dust':'🔴','Lapis Lazuli':'🔵',
-  'Carrot':'🥕','Golden Carrot':'🥕','Book':'📖','Bookshelf':'📚',
-  'Hay Bale':'🌾','Steak':'🥩','Cake':'🎂','Cookie':'🍪',
-  'Cooked Chicken':'🍗',"Rabbit's Foot":'🐇','Golden Apple':'🍏',
-  'Enchanted Golden Apple':'🍎','White Wool':'🤍','Rail':'🛤️',
-  'Ghast Tear':'💧','Chorus Fruit':'🫐','Totem of Undying':'🗿',
-  'Heart of the Sea':'🌊','Iron Boots':'👢','Nether Wart Block':'🍄',
-  'Mistletoe':'🌿','Any Planks':'🪵','Lava Bucket':'🔥','Anvil':'⚒️',
-  'Chiseled Stone Bricks':'🪨','Vines':'🌿','Feather':'🪶',
-  'Gilded Blackstone':'🪨','Eye of Ender':'👁️','Ancient Tome':'📜',
-  'Paper':'📄','Rack':'📦','Clipboard':'📋','Beehive':'🏠',
-  'Egg':'🥚','Wheat Seeds':'🌿','Poppy':'🌹','Stone':'🪨',
-  'Brick':'🧱','Glass':'🔮','String':'🧵','Bamboo':'🎋',
-  'Cocoa Beans':'🟫','Deepslate':'🪨','Podzol':'🟫',
-  'Glow Berries':'✨','Crimson Fungus':'🍄','Warped Fungus':'🍄',
-  'Sea Pickle':'🥒','Kelp':'🌿','Seagrass':'🌿',
-  'Any Concrete':'⬜','Wooden Gate':'🚪','Iron Gate':'🚪',
-  'Obsidian':'⬛','Nether Wart':'🍄','Gravel':'⬛','Sand':'🏜️',
-  'Clay':'🟫','Cactus':'🌵','Sugar Cane':'🌿','Bucket of Salmon':'🐟',
-};
-const emo=i=>EMO[i]||'📦';
-const pill=(i,n)=>`<span class="pill">${emo(i)} <strong>${n}</strong> ${i}</span>`;
-const chip=(i,n)=>`<span class="ichip"><span class="cnt">×${n.toLocaleString()}</span>${emo(i)} ${i}</span>`;
-
-// ── BUILDING CATEGORIES ───────────────────────────
-const BLDG_CATS=[
-  {cat:'🏛️ Fundamentals',items:[
-    {n:'Town Hall',m:5},{n:"Builder's Hut",m:5},{n:'Residence',m:5},
-    {n:'Dining Hall',m:5},{n:'Hospital',m:5},{n:"Forester's Hut",m:5},
-    {n:'Mine',m:5},{n:'Quarry',m:3},{n:'Tavern',m:3}
-  ]},
-  {cat:'🌾 Agriculture',items:[
-    {n:"Farmer's Hut",m:5},{n:"Fisher's Hut",m:5},{n:'Apiary',m:5},
-    {n:"Cowhand's Hut",m:5},{n:"Shepherd's Hut",m:5},{n:"Swineherd's Hut",m:5},
-    {n:"Chicken Farmer's Hut",m:5},{n:'Rabbit Hutch',m:5},{n:"Composter's Hut",m:5},
-    {n:'Flower Shop',m:5},{n:'Plantation',m:5}
-  ]},
-  {cat:'⚙️ Craftsmanship',items:[
-    {n:'Warehouse',m:5},{n:"Courier's Hut",m:5},{n:'Sawmill',m:5},
-    {n:"Blacksmith's Hut",m:5},{n:'Smeltery',m:5},{n:'Brick Yard',m:5},
-    {n:"Stonemason's Hut",m:5},{n:"Crusher's Hut",m:5},{n:"Mechanic's Hut",m:5},
-    {n:"Glassblower's Hut",m:5},{n:"Dyer's Hut",m:5},{n:"Fletcher's Hut",m:5},
-    {n:"Concrete Mixer's Hut",m:5},{n:"Sifter's Hut",m:5},{n:'Bakery',m:5},
-    {n:"Chef's Kitchen",m:5},{n:'Alchemist Laboratory',m:5}
-  ]},
-  {cat:'📚 Education',items:[
-    {n:'University',m:5},{n:'Library',m:5},{n:'School',m:5}
-  ]},
-  {cat:'⚔️ Military',items:[
-    {n:'Guard Tower',m:5},{n:'Barracks',m:5},{n:'Combat Academy',m:5},
-    {n:'Archery',m:5},{n:'Gatehouse',m:5}
-  ]},
-  {cat:'🔮 Mystic',items:[
-    {n:"Enchanter's Tower",m:5},{n:'Graveyard',m:5},{n:'Mystical Site',m:5},
-    {n:'Nether Mine',m:5}
-  ]},
-];
-
-const LEVEL_COLORS=['','#64748b','#6366f1','#a855f7','#f59e0b','#ef4444','#10b981'];
-const LEVEL_LABELS=['','University Level 1','University Level 2','University Level 3','University Level 4','University Level 5','★ Exclusive (Level 6)'];
-
-// ── LOAD DATA ─────────────────────────────────────
 async function loadData(){
   try{
-    const[r1,r2,r3]=await Promise.all([
-      fetch(`${SUPABASE_URL}/rest/v1/research?select=*&order=tree.asc,uni_level.asc,name.asc`,{headers}),
-      fetch(`${SUPABASE_URL}/rest/v1/research_costs?select=*`,{headers}),
-      fetch(`${SUPABASE_URL}/rest/v1/research_breqs?select=*`,{headers}),
+    const[r1,r2,r3,r4]=await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/biomes?select=*&order=name.asc`,{headers:H}),
+      fetch(`${SUPABASE_URL}/rest/v1/biome_crops?select=*`,{headers:H}),
+      fetch(`${SUPABASE_URL}/rest/v1/food_recipes?select=*&order=level.desc,name.asc`,{headers:H}),
+      fetch(`${SUPABASE_URL}/rest/v1/food_ingredients?select=*`,{headers:H}),
     ]);
-    R=await r1.json();
-    costs=await r2.json();
-    breqs=await r3.json();
-    byId=Object.fromEntries(R.map(r=>[r.id,r]));
+    biomes=await r1.json();
+    biomeCropsData=await r2.json();
+    recipes=await r3.json();
+    ingredients=await r4.json();
+    biomeById=Object.fromEntries(biomes.map(b=>[b.id,b]));
+    biomeCropsData.forEach(bc=>{
+      const b=biomeById[bc.biome_id];
+      if(b){if(!cropToBiome[bc.crop])cropToBiome[bc.crop]=[];cropToBiome[bc.crop].push(b.name);}
+    });
+    recipes.forEach(r=>recipeNames.add(r.name));
     document.getElementById('app-loading').style.display='none';
     document.getElementById('app').style.display='';
-    await loadColonyData();
     renderAll();
   }catch(e){
     document.getElementById('app-loading').style.display='none';
@@ -560,326 +290,280 @@ async function loadData(){
   }
 }
 
-// ── HELPERS ───────────────────────────────────────
-function getCosts(id){return costs.filter(c=>c.research_id===id)}
-function getBreqs(id){return breqs.filter(b=>b.research_id===id)}
-function getParent(r){return r.parent_id?byId[r.parent_id]:null}
-
-function getUnavailableIds(){
-  const unavail=new Set();
-  const groups={};
-  R.forEach(r=>{
-    if(r.exclusive_group){
-      if(!groups[r.exclusive_group])groups[r.exclusive_group]=[];
-      groups[r.exclusive_group].push(r);
-    }
+function getAvailableCrops(){
+  const crops=new Set();
+  biomeCropsData.forEach(bc=>{
+    const b=biomeById[bc.biome_id];
+    if(b&&selectedBiomes.has(b.name))crops.add(bc.crop);
   });
-  for(const[,members] of Object.entries(groups)){
-    for(const m of members){
-      const st=getStatus(m.id);
-      if(st==='finished'||st==='materials'){
-        members.filter(o=>o.id!==m.id).forEach(o=>addBranch(o.id,unavail));
-      }
-    }
-  }
-  return unavail;
+  return crops;
 }
 
-function addBranch(id,set){
-  if(set.has(id))return;
-  set.add(id);
-  R.filter(r=>r.parent_id===id).forEach(r=>addBranch(r.id,set));
-}
-
-function isLocked(r,unavail){
-  if(unavail&&unavail.has(r.id))return false;
-  if(getBld('University')<Math.min(r.uni_level,5))return true;
-  const b=getBreqs(r.id);
-  for(const req of b)if(getBld(req.building)<req.level)return true;
-  if(r.parent_id&&getStatus(r.parent_id)!=='finished')return true;
-  return false;
-}
-
-function statusClass(id){
-  const s=getStatus(id),p=planSet.has(id);
-  return s==='finished'?'s-finished':s==='materials'?'s-materials':p?'s-plan':'';
-}
-
-function treeColor(t){return{combat:'var(--com)',civilian:'var(--civ)',technology:'var(--tec)'}[t]||'var(--accent)'}
-
-function getChain(id){
-  const c=[];let cur=byId[id];
-  while(cur){c.unshift(cur);cur=cur.parent_id?byId[cur.parent_id]:null;}
-  return c;
-}
-
-function getAllPlan(){
-  const m=new Map();
-  for(const id of planSet)for(const r of getChain(id))m.set(r.id,r);
-  return[...m.values()];
-}
-
-function computeTotals(rs){
-  const it={},bl={};
-  for(const r of rs){
-    getCosts(r.id).forEach(c=>{it[c.item]=(it[c.item]||0)+c.quantity});
-    getBreqs(r.id).forEach(b=>{bl[b.building]=Math.max(bl[b.building]||0,b.level)});
-  }
-  return{it,bl};
-}
-
-function updateBadge(){
-  const b=document.getElementById('plan-badge');
-  b.style.display=planSet.size?'':'none';
-  b.textContent=planSet.size;
-}
-
-// ── CARDS VIEW ────────────────────────────────────
-function renderCards(){
-  const search=document.getElementById('search').value.toLowerCase();
-  const colF=document.getElementById('col-filter').value;
-  const unavail=getUnavailableIds();
-
-  const filtered=R.filter(r=>{
-    if(r.tree!==currentTree)return false;
-    if(colF&&String(r.uni_level)!==colF)return false;
-    if(search){
-      const rc=getCosts(r.id),rb=getBreqs(r.id);
-      const h=[r.name,r.effect,...rb.map(b=>b.building),...rc.map(c=>c.item)].join(' ').toLowerCase();
-      if(!h.includes(search))return false;
-    }
-    return true;
-  });
-
-  document.getElementById('cards-count').textContent=`${filtered.length} research${filtered.length!==1?'es':''}`;
-  const grid=document.getElementById('cards-grid');grid.innerHTML='';
-
-  const byCol={};
-  filtered.forEach(r=>{if(!byCol[r.uni_level])byCol[r.uni_level]=[];byCol[r.uni_level].push(r)});
-
-  Object.keys(byCol).sort((a,b)=>a-b).forEach(col=>{
-    const colNum=parseInt(col),items=byCol[col];
-    const section=document.createElement('div');section.className='level-section';
-    const hdr=document.createElement('div');hdr.className='level-hdr';
-    hdr.innerHTML=`<span class="level-hdr-text" style="color:${LEVEL_COLORS[colNum]}">${LEVEL_LABELS[colNum]}</span><span class="level-hdr-count">${items.length} research${items.length!==1?'es':''}</span>`;
-    section.appendChild(hdr);
-
-    const innerGrid=document.createElement('div');innerGrid.className='cards-grid';
-
-    items.forEach(r=>{
-      const isUnavail=unavail.has(r.id);
-      const locked=!isUnavail&&isLocked(r,unavail);
-      const sc=statusClass(r.id);
-      const inPlan=planSet.has(r.id);
-      const st=getStatus(r.id);
-      const pName=r.parent_id?byId[r.parent_id]?.name:null;
-      const rc=getCosts(r.id),rb=getBreqs(r.id);
-
-      const div=document.createElement('div');
-      div.className=`rcard lb${r.uni_level} ${sc}${isUnavail?' unavailable':''}`;
-      div.innerHTML=`
-        ${locked?'<div class="lock-overlay"><span>🔒</span></div>':''}
-        ${isUnavail?'<div class="unavail-overlay"><span>✖</span></div>':''}
-        <div class="rname"><span>${r.name}</span><span class="badge b${r.uni_level}">Uni ${r.uni_level}</span>${r.exclusive?'<span class="badge b6">★</span>':''}</div>
-        <div class="reff">${r.effect}</div>
-        ${pName?`<div class="rmeta">🔓 <span style="color:var(--gold);font-style:italic;font-weight:500">${pName}</span></div>`:'<div class="rmeta dim" style="font-weight:400;font-size:12px;font-style:italic;color:#3d5a70">🔓 No prerequisite</div>'}
-        ${rb.length?`<div class="rmeta">🏗️ ${rb.map(b=>`${b.building} Lv${b.level}`).join(', ')}</div>`:''}
-        <div class="rcosts">${rc.map(c=>pill(c.item,c.quantity)).join('')}</div>
-        <div class="sbrow">
-          <button class="sb${inPlan?' active-plan':''}" data-action="plan"${isUnavail?' disabled':''}>＋ Plan</button>
-          <button class="sb${st==='materials'?' active-mat':''}" data-action="materials"${isUnavail?' disabled':''}>📦 Materials</button>
-          <button class="sb${st==='finished'?' active-done':''}" data-action="finished"${isUnavail?' disabled':''}>✅ Done</button>
-        </div>`;
-      if(!isUnavail){
-        div.querySelectorAll('.sb').forEach(btn=>btn.addEventListener('click',e=>{
-          const a=e.target.dataset.action;
-          if(a==='plan')togglePlan(r.id);else setStatus(r.id,a);
-        }));
-      }
-      innerGrid.appendChild(div);
-    });
-    section.appendChild(innerGrid);
-    grid.appendChild(section);
-  });
-}
-
-// ── PLANNER VIEW ──────────────────────────────────
-function renderPlanner(){
-  updateBadge();
-  const all=getAllPlan();
-  const empty=document.getElementById('plan-empty');
-  const content=document.getElementById('plan-content');
-  if(!all.length){empty.style.display='';content.style.display='none';return;}
-  empty.style.display='none';content.style.display='';
-
-  const chainsDiv=document.getElementById('plan-chains');chainsDiv.innerHTML='';
-  for(const id of planSet){
-    const r=byId[id];if(!r)continue;
-    const chain=getChain(id);
-    const div=document.createElement('div');div.className='plan-chain';
-    let html=`<div class="pchain-hdr"><span style="color:${treeColor(r.tree)}">🎯 ${r.name}</span><span class="badge b${r.uni_level}" style="margin-left:auto">${r.tree} · Uni ${r.uni_level}</span><button class="rm-btn" onclick="window._rm(${id})">✕</button></div>`;
-    chain.forEach(step=>{
-      const isGoal=step.id===id;
-      const rb=getBreqs(step.id);
-      html+=`<div class="pstep${isGoal?'':' prereq'}"><span style="color:${isGoal?treeColor(r.tree):'#2d4560'}">${isGoal?'🎯':'↳'}</span><span style="font-weight:${isGoal?700:400}">${step.name}</span><span class="badge b${step.uni_level}" style="font-size:10px">Lv${step.uni_level}</span><span class="pstep-meta">${rb.map(b=>b.building+' Lv'+b.level).join(' · ')}</span></div>`;
-    });
-    div.innerHTML=html;chainsDiv.appendChild(div);
-  }
-
-  const{it,bl}=computeTotals(all);
-  document.getElementById('plan-items').innerHTML=Object.entries(it).sort((a,b)=>b[1]-a[1]).map(([i,n])=>chip(i,n)).join('');
-  const bldList=Object.entries(bl).sort((a,b)=>b[1]-a[1]);
-  document.getElementById('plan-buildings').innerHTML=bldList.length?bldList.map(([b,l])=>`<div class="brow"><span>${b}</span><span class="blvl">Lv ${l}+</span></div>`).join(''):'<div style="font-size:13px;color:#243548">No building requirements</div>';
-}
-window._rm=id=>{planSet.delete(id);renderAll()};
-
-// ── BUILDINGS VIEW ────────────────────────────────
-function renderBuildings(){
-  const content=document.getElementById('bld-content');content.innerHTML='';
-  BLDG_CATS.forEach(cat=>{
-    const sec=document.createElement('div');sec.className='bld-section';
-    let html=`<div class="bld-cat">${cat.cat}</div><div class="bld-grid">`;
-    cat.items.forEach(bld=>{
-      const k=bld.n,max=bld.m,cur=getBld(k);
-      const levels=[0,...Array.from({length:max},(_,i)=>i+1)];
-      const btns=levels.map(l=>`<button class="lvl-btn${cur===l?' active'+(l===0?' lv0':''):''}" data-k="${k}" data-l="${l}">${l===0?'—':l}</button>`).join('');
-      html+=`<div class="bld-card"><div class="bld-name">${k}</div><div class="lvl-btns">${btns}</div></div>`;
-    });
-    html+='</div>';
-    sec.innerHTML=html;
-    sec.querySelectorAll('.lvl-btn').forEach(btn=>btn.addEventListener('click',()=>setBld(btn.dataset.k,parseInt(btn.dataset.l))));
-    content.appendChild(sec);
-  });
-}
-
-// ── TREE VIEW ─────────────────────────────────────
-const CW=185,CG=36,NH=78,NG=7,HH=30,PAD=10;
-const LCOL=['','#64748b','#6366f1','#a855f7','#f59e0b','#ef4444','#10b981'];
-let selectedNode=null;
-
-function dfsOrder(tree){
-  const all=R.filter(r=>r.tree===tree);
-  const roots=all.filter(r=>!r.parent_id||!byId[r.parent_id]||byId[r.parent_id].tree!==tree);
-  const visited=new Set(),result=[];
-  function visit(r){if(visited.has(r.id))return;visited.add(r.id);result.push(r);all.filter(c=>c.parent_id===r.id).forEach(visit);}
-  roots.sort((a,b)=>a.uni_level-b.uni_level).forEach(visit);all.forEach(visit);
-  return result;
-}
-
-function renderTree(){
-  const colsDiv=document.getElementById('tree-cols'),svg=document.getElementById('tree-svg');
-  colsDiv.innerHTML='';svg.innerHTML='';
-  const ordered=dfsOrder(currentTree);
-  const cols={};
-  ordered.forEach(r=>{if(!cols[r.uni_level])cols[r.uni_level]=[];cols[r.uni_level].push(r)});
-  const maxCol=Math.max(...Object.keys(cols).map(Number));
-  const maxRows=Math.max(...Object.values(cols).map(a=>a.length));
-  const W=PAD*2+maxCol*(CW+CG)-CG,H=PAD*2+HH+NG+maxRows*(NH+NG);
-  colsDiv.style.cssText=`position:relative;width:${W}px;height:${H}px`;
-  svg.setAttribute('width',W);svg.setAttribute('height',H);
-  const pos={};
-  const unavail=getUnavailableIds();
-
-  for(let col=1;col<=maxCol;col++){
-    const nodes=cols[col]||[],x=PAD+(col-1)*(CW+CG);
-    const hdr=document.createElement('div');
-    hdr.className='tcol-hdr';
-    hdr.style.cssText=`left:${x}px;top:${PAD}px;width:${CW}px;height:${HH}px;color:${LCOL[col]||'#94a3b8'}`;
-    hdr.textContent=col===6?'★ Exclusive':'University Level '+col;
-    colsDiv.appendChild(hdr);
-    nodes.forEach((r,i)=>{
-      const y=PAD+HH+NG+i*(NH+NG);
-      const locked=!unavail.has(r.id)&&isLocked(r,unavail);
-      const st=getStatus(r.id),inPlan=planSet.has(r.id),isSel=selectedNode===r.id;
-      const sc=st?'s-'+st:inPlan?'s-plan':'';
-      const node=document.createElement('div');
-      node.className=`tnode lb${r.uni_level} ${sc} ${isSel?'selected':''} ${unavail.has(r.id)?'unavailable':''}`;
-      node.dataset.id=r.id;
-      node.style.cssText=`left:${x}px;top:${y}px;width:${CW}px;height:${NH}px`;
-      node.innerHTML=`
-        ${locked?'<div class="tnode-lock">🔒</div>':''}
-        ${unavail.has(r.id)?'<div class="tnode-lock">✖</div>':''}
-        <div class="tnode-name">${r.name}</div>
-        <div class="tnode-eff">${r.effect.length>58?r.effect.slice(0,55)+'…':r.effect}</div>
-        <div class="tnode-status"><div class="tnode-dot${inPlan?' s-plan':''}${st?' s-'+st:''}"></div></div>`;
-      node.addEventListener('click',()=>{selectedNode=r.id;renderDetailPanel(r.id);renderTree();});
-      colsDiv.appendChild(node);
-      pos[r.id]={rx:x+CW,ry:y+NH/2,lx:x,ly:y+NH/2};
+function getAllAvailable(){
+  const avail=new Set([...checkedIngs,...getAvailableCrops()]);
+  let changed=true;
+  while(changed){
+    changed=false;
+    recipes.forEach(r=>{
+      if(avail.has(r.name))return;
+      const ings=ingredients.filter(i=>i.recipe_id===r.id);
+      if(ings.every(i=>avail.has(i.ingredient))){avail.add(r.name);changed=true;}
     });
   }
+  return avail;
+}
 
-  R.filter(r=>r.tree===currentTree).forEach(r=>{
-    if(!r.parent_id||!pos[r.parent_id]||!pos[r.id])return;
-    const p=pos[r.parent_id],c=pos[r.id],mx=(p.rx+c.lx)/2;
-    const hi=planSet.has(r.id)&&planSet.has(r.parent_id);
-    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d',`M${p.rx},${p.ry} C${mx},${p.ry} ${mx},${c.ly} ${c.lx},${c.ly}`);
-    path.setAttribute('stroke',hi?'#1d4ed8':selectedNode===r.id||selectedNode===r.parent_id?'#7dd3fc55':'#182d44');
-    path.setAttribute('stroke-width',hi?'2':'1.5');
-    path.setAttribute('fill','none');
-    svg.appendChild(path);
+function getRecipeIngs(id){return ingredients.filter(i=>i.recipe_id===id)}
+
+function canMake(r,avail){return getRecipeIngs(r.id).every(i=>avail.has(i.ingredient))}
+
+function getBiomesForRecipe(recipeId){
+  const visited=new Set(),bnames=new Set();
+  function traverse(rid){
+    if(visited.has(rid))return;visited.add(rid);
+    getRecipeIngs(rid).forEach(ing=>{
+      const bns=cropToBiome[ing.ingredient];
+      if(bns)bns.filter(b=>b!=='all').forEach(b=>{
+        const bm=biomes.find(x=>x.name===b);
+        if(bm)bnames.add(bm.display_name);
+      });
+      const sub=recipes.find(r=>r.name===ing.ingredient);
+      if(sub)traverse(sub.id);
+    });
+  }
+  traverse(recipeId);
+  return[...bnames];
+}
+
+function formatIngs(recipeId,avail,showMissing){
+  return getRecipeIngs(recipeId).map(ing=>{
+    const qty=ing.quantity>1?`<span class="ing-count">${ing.quantity}×</span> `:'';
+    const isInter=recipeNames.has(ing.ingredient);
+    const isBiome=!!cropToBiome[ing.ingredient]&&!cropToBiome[ing.ingredient].includes('all');
+    const isMissing=!avail.has(ing.ingredient);
+    let cls=isMissing&&showMissing?'ing-missing':isInter?'ing-inter':isBiome?'ing-biome':'ing-base';
+    return`<span class="${cls}">${qty}${ing.ingredient}</span>`;
+  }).join('<span style="color:#1e3048"> · </span>');
+}
+
+// ── BIOMES ──────────────────────────────────────────
+function renderBiomes(){
+  const allBiome=biomes.find(b=>b.name==='all');
+  const otherBiomes=biomes.filter(b=>b.name!=='all');
+  if(allBiome){
+    const crops=biomeCropsData.filter(bc=>bc.biome_id===allBiome.id).map(bc=>bc.crop);
+    document.getElementById('universal-crops').innerHTML=crops.map(c=>`<span class="biome-crop-tag">${c}</span>`).join('');
+  }
+  const grid=document.getElementById('biome-grid');
+  grid.innerHTML=otherBiomes.map(b=>{
+    const crops=biomeCropsData.filter(bc=>bc.biome_id===b.id).map(bc=>bc.crop);
+    const sel=selectedBiomes.has(b.name);
+    return`<div class="biome-card${sel?' selected':''}" data-biome="${b.name}">
+      <div class="biome-name">${b.display_name}<span class="biome-check">✓</span></div>
+      <div>${crops.map(c=>`<span class="biome-crop-tag${sel?' have':''}">${c}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('.biome-card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      const name=card.dataset.biome;
+      if(selectedBiomes.has(name))selectedBiomes.delete(name);else selectedBiomes.add(name);
+      renderAll();
+    });
   });
 }
 
-function renderDetailPanel(id){
-  const r=byId[id];if(!r)return;
-  document.getElementById('detail-panel').style.display='';
-  document.getElementById('dp-name').textContent=r.name;
-  document.getElementById('dp-badges').innerHTML=`<span class="badge b${r.uni_level}">Uni Level ${r.uni_level}</span>${r.exclusive?'<span class="badge b6">★ Exclusive</span>':''}`;
-  document.getElementById('dp-eff').textContent=r.effect;
-  const pName=r.parent_id?byId[r.parent_id]?.name:null;
-  document.getElementById('dp-prereq').textContent=pName?`↳ ${pName}`:'None — root research';
-  const rb=getBreqs(id);
-  document.getElementById('dp-breqs').innerHTML=rb.length?rb.map(b=>`<div class="dp-meta">🏗️ ${b.building} Lv${b.level}</div>`).join(''):'<div style="font-size:12px;color:#3d5a70;font-style:italic">No building requirements</div>';
-  const rc=getCosts(id);
-  document.getElementById('dp-costs').innerHTML=rc.map(c=>pill(c.item,c.quantity)).join('');
-  const inPlan=planSet.has(id),st=getStatus(id);
-  document.getElementById('dp-plan').className=`dp-sb${inPlan?' active-plan':''}`;
-  document.getElementById('dp-mat').className=`dp-sb${st==='materials'?' active-mat':''}`;
-  document.getElementById('dp-done').className=`dp-sb${st==='finished'?' active-done':''}`;
-  document.getElementById('dp-plan').onclick=()=>{togglePlan(id);renderDetailPanel(id);};
-  document.getElementById('dp-mat').onclick=()=>{setStatus(id,'materials');renderDetailPanel(id);};
-  document.getElementById('dp-done').onclick=()=>{setStatus(id,'finished');renderDetailPanel(id);};
+// ── INGREDIENTS ──────────────────────────────────────
+function renderIngredients(){
+  const availCrops=getAvailableCrops();
+
+  // Have crops box
+  const haveCrops=[...availCrops].filter(c=>cropToBiome[c]&&!cropToBiome[c].includes('all'));
+  const haveBox=document.getElementById('have-crops-list');
+  haveBox.innerHTML=haveCrops.length
+    ?haveCrops.map(c=>`<span class="biome-crop-tag have">${c}</span>`).join('')
+    :'<div class="have-crops-empty">No biomes selected yet — go to the 🌍 Biomes tab!</div>';
+
+  // Biome crops list
+  const allBiomeCrops=biomeCropsData
+    .filter(bc=>biomeById[bc.biome_id]?.name!=='all')
+    .map(bc=>bc.crop)
+    .filter((v,i,a)=>a.indexOf(v)===i)
+    .sort();
+  document.getElementById('ing-biome-list').innerHTML=allBiomeCrops.map(crop=>{
+    const isAvail=availCrops.has(crop);
+    return`<div class="ing-row locked-ing${isAvail?' available':''}">
+      <input type="checkbox" ${isAvail?'checked':''} disabled/>
+      <label>${crop}${isAvail?' <span class="ing-note">(available from biome)</span>':' <span class="ing-note">(biome not selected)</span>'}</label>
+    </div>`;
+  }).join('');
+
+  // Animal
+  document.getElementById('ing-animal-list').innerHTML=ANIMAL_INGS.map(ing=>ingRow(ing)).join('');
+  // Vanilla
+  document.getElementById('ing-vanilla-list').innerHTML=VANILLA_INGS.map(ing=>ingRow(ing)).join('');
+  // Always
+  document.getElementById('ing-always-list').innerHTML=ALWAYS_INGS.map(ing=>`
+    <div class="ing-row">
+      <input type="checkbox" checked disabled/>
+      <label>${ing} <span class="ing-note">(always available)</span></label>
+    </div>`).join('');
+
+  // Bind checkboxes
+  document.querySelectorAll('#tab-ingredients input[type=checkbox]:not([disabled])').forEach(cb=>{
+    cb.addEventListener('change',()=>{
+      const label=cb.nextElementSibling.textContent.trim().split('(')[0].trim();
+      if(cb.checked)checkedIngs.add(label);else checkedIngs.delete(label);
+      renderMeals();
+    });
+  });
 }
 
-// ── RENDER ALL ────────────────────────────────────
-function renderAll(){
-  if(currentTree==='buildings'){renderBuildings();return;}
-  if(currentView==='cards')renderCards();
-  else if(currentView==='tree')renderTree();
+function ingRow(ing){
+  const checked=checkedIngs.has(ing);
+  return`<div class="ing-row" data-ing="${ing}">
+    <input type="checkbox" id="cb-${ing.replace(/\s/g,'_')}" ${checked?'checked':''}/>
+    <label for="cb-${ing.replace(/\s/g,'_')}">${ing}</label>
+  </div>`;
+}
+
+// ── MEALS ──────────────────────────────────────────
+function renderMeals(){
+  const avail=getAllAvailable();
+  const levels=[5,3,1];
+  const info={
+    5:{label:'Level 5 — Happy For Sure',cls:'lvl5',cc:'lvl5-color'},
+    3:{label:'Level 3 — Satisfied',cls:'lvl3',cc:'lvl3-color'},
+    1:{label:'Level 1 — Somewhat Acceptable',cls:'lvl1',cc:'lvl1-color'},
+  };
+
+  const makeable=recipes.filter(r=>canMake(r,avail));
+  const notyet=recipes.filter(r=>!canMake(r,avail));
+
+  document.getElementById('avail-count').textContent=`(${makeable.length})`;
+  document.getElementById('notyet-count').textContent=`(${notyet.length})`;
+
+  // AVAILABLE tab
+  let html='';
+  let anyAvail=false;
+  for(const lvl of levels){
+    const group=makeable.filter(r=>r.level===lvl);
+    if(!group.length)continue;
+    anyAvail=true;
+    const i=info[lvl];
+    html+=mealSection(group,i,avail,false);
+  }
+  document.getElementById('meals-available').innerHTML=anyAvail?html:'<div class="no-meals">No recipes available yet — set your biomes and ingredients first!</div>';
+
+  // NOT YET tab
+  let html2='';
+  let anyNotYet=false;
+  for(const lvl of levels){
+    const group=notyet.filter(r=>r.level===lvl);
+    if(!group.length)continue;
+    anyNotYet=true;
+    const i=info[lvl];
+    html2+=mealSection(group,i,avail,true);
+  }
+  document.getElementById('meals-notyet').innerHTML=anyNotYet?html2:'<div class="no-meals">🎉 You can make everything! Your colony eats well.</div>';
+
   renderPlanner();
 }
 
-// ── EVENTS ────────────────────────────────────────
-document.querySelectorAll('.tnav').forEach(btn=>btn.addEventListener('click',()=>{
-  document.querySelectorAll('.tnav').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');currentTree=btn.dataset.tree;
-  selectedNode=null;
-  document.getElementById('detail-panel').style.display='none';
-  const isRes=currentTree!=='buildings';
-  document.getElementById('view-tabs').style.display=isRes?'flex':'none';
-  document.getElementById('cards-view').style.display=isRes&&currentView==='cards'?'block':'none';
-  document.getElementById('tree-view').style.display=isRes&&currentView==='tree'?'block':'none';
-  document.getElementById('planner-view').style.display=isRes&&currentView==='planner'?'block':'none';
-  document.getElementById('buildings-view').style.display=!isRes?'block':'none';
-  renderAll();
+function mealSection(group,info,avail,showMissing){
+  return`<div class="meal-section">
+    <div class="meal-section-hdr">
+      <span class="meal-section-name ${info.cc}">${info.label}</span>
+      <span class="meal-section-count">${group.length} recipe${group.length!==1?'s':''}</span>
+    </div>
+    <div class="meals-grid">
+      ${group.map(r=>{
+        const biomeReqs=getBiomesForRecipe(r.id);
+        const planned=plannedMeals.has(r.id);
+        const canM=!showMissing;
+        return`<div class="meal-card ${info.cls}">
+          <div class="meal-name">${r.name}</div>
+          <div class="meal-meta">
+            <span class="crafter-badge crafter-${r.crafter}">${r.crafter}</span>
+            ${biomeReqs.map(b=>`<span class="biome-tag">🌍 ${b}</span>`).join('')}
+          </div>
+          <div class="meal-ings">${formatIngs(r.id,avail,showMissing)}</div>
+          ${r.notes?`<div style="font-size:11px;color:var(--muted);font-style:italic;margin-bottom:6px">💬 ${r.notes}</div>`:''}
+          ${canM?`<button class="plan-btn${planned?' planned':''}" onclick="togglePlan(${r.id},'${r.name.replace(/'/g,"\\'")}',${r.level})">${planned?'✓ Planned':'＋ Add to Plan'}</button>`:
+          `<div style="font-size:11px;color:var(--red);font-style:italic">Missing ingredients highlighted above</div>`}
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function togglePlan(id,name,level){
+  if(plannedMeals.has(id)){plannedMeals.delete(id);delete planData[id];}
+  else{plannedMeals.add(id);planData[id]={name,level};}
+  renderMeals();
+}
+
+function renderPlanner(){
+  const list=document.getElementById('planner-list');
+  const totals=document.getElementById('planner-totals');
+  const clearBtn=document.getElementById('clear-all');
+  document.getElementById('plan-count').textContent=plannedMeals.size+' meal'+(plannedMeals.size!==1?'s':'');
+  if(!plannedMeals.size){
+    list.innerHTML='<div class="planner-empty">No meals planned yet</div>';
+    totals.style.display='none';clearBtn.style.display='none';return;
+  }
+  clearBtn.style.display='';
+  list.innerHTML=[...plannedMeals].map(id=>{
+    const d=planData[id];
+    return`<div class="planner-item">
+      <span>${d?.name||'?'}</span>
+      <button class="planner-remove" onclick="togglePlan(${id},'${(d?.name||'').replace(/'/g,"\\'")}',${d?.level||0})">✕</button>
+    </div>`;
+  }).join('');
+  const ingTotals={};
+  plannedMeals.forEach(id=>{
+    ingredients.filter(i=>i.recipe_id===id).forEach(i=>{
+      ingTotals[i.ingredient]=(ingTotals[i.ingredient]||0)+i.quantity;
+    });
+  });
+  totals.style.display='';
+  document.getElementById('planner-ings').innerHTML=Object.entries(ingTotals)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([i,n])=>`<span class="ing-chip"><span class="cnt">×${n}</span>${i}</span>`)
+    .join('');
+}
+
+document.getElementById('clear-all').addEventListener('click',()=>{
+  plannedMeals.clear();Object.keys(planData).forEach(k=>delete planData[k]);renderMeals();
+});
+
+function renderAll(){
+  renderBiomes();
+  renderIngredients();
+  renderMeals();
+}
+
+// ── MAIN TABS ──────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
 }));
 
-document.querySelectorAll('.vtab').forEach(btn=>btn.addEventListener('click',()=>{
-  document.querySelectorAll('.vtab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');currentView=btn.dataset.view;
-  document.getElementById('cards-view').style.display=currentView==='cards'?'block':'none';
-  document.getElementById('tree-view').style.display=currentView==='tree'?'block':'none';
-  document.getElementById('planner-view').style.display=currentView==='planner'?'block':'none';
-  renderAll();
-}));
+// ── SUB TABS ───────────────────────────────────────
+function bindSubTabs(navId,prefix){
+  document.querySelectorAll(`#${navId} .sub-tab-btn`).forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll(`#${navId} .sub-tab-btn`).forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const sub=btn.dataset.sub;
+    document.querySelectorAll(`#${prefix} .sub-tab-content`).forEach(t=>t.classList.remove('active'));
+    document.getElementById(`sub-${sub}`).classList.add('active');
+  }));
+}
 
-document.getElementById('search').addEventListener('input',renderAll);
-document.getElementById('col-filter').addEventListener('change',renderAll);
-document.getElementById('clear-btn').addEventListener('click',()=>{planSet.clear();renderAll()});
+bindSubTabs('ing-sub-nav','tab-ingredients');
+bindSubTabs('meals-sub-nav','tab-meals');
 
-// ── INIT ──────────────────────────────────────────
-initColonyBar();
 loadData();
 </script>
 </body>
