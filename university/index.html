@@ -86,9 +86,9 @@ select{padding:7px 10px;border-radius:8px;border:1px solid var(--border);backgro
 
 .rname{font-size:15px;font-weight:700;margin-bottom:4px;padding-right:8px;display:flex;align-items:flex-start;gap:6px;font-family:'Cinzel',serif}
 .rname span{flex:1;line-height:1.3}
-.reff{font-size:13px;color:#7a9ab0;margin:4px 0 6px}
-.rmeta{font-size:12.5px;color:var(--muted);margin:2px 0;font-weight:700;font-family:'Cinzel',serif}
-.rmeta .dim{font-weight:400;font-style:italic;color:#3d5a70}
+.reff{font-size:13px;color:#9ab8cc;margin:4px 0 6px}
+.rmeta{font-size:12.5px;color:#8aabbf;margin:2px 0;font-weight:700;font-family:'Cinzel',serif}
+.rmeta .dim{font-weight:500;font-style:italic;color:#7a9ab0}
 .rcosts{margin-top:7px;display:flex;flex-wrap:wrap}
 .sbrow{display:flex;gap:5px;margin-top:10px}
 .sb{flex:1;padding:5px 4px;border-radius:6px;font-size:11.5px;font-weight:600;background:#0d1e30;color:var(--muted);border:1px solid var(--border);transition:all .15s;font-family:'Cinzel',serif}
@@ -132,6 +132,41 @@ select{padding:7px 10px;border-radius:8px;border:1px solid var(--border);backgro
 .loading{text-align:center;padding:60px;color:var(--muted);font-style:italic;font-size:18px}
 .error-box{padding:24px;background:rgba(192,80,74,.08);border:1px solid rgba(192,80,74,.3);border-radius:10px;color:var(--red);font-size:15px;text-align:center}
 
+/* TREE */
+.tree-layout{display:flex;gap:12px;align-items:flex-start}
+#tree-wrap{flex:1;min-width:0;position:relative;overflow:auto;max-height:620px;border:1px solid var(--border);border-radius:10px;background:#050c16}
+#tree-svg{position:absolute;top:0;left:0;pointer-events:none;overflow:visible}
+#tree-cols{position:relative}
+.tcol-hdr{position:absolute;background:rgba(5,12,22,.95);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;font-family:'Cinzel',serif}
+.tnode{position:absolute;background:#0d1525;border-radius:8px;padding:7px 9px;cursor:pointer;transition:all .15s;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.tnode:hover{filter:brightness(1.15)}
+.tnode.selected{box-shadow:0 0 0 2px var(--accent)}
+.tnode-name{font-size:11px;font-weight:700;line-height:1.3;color:var(--text);font-family:'Cinzel',serif}
+.tnode-eff{font-size:9.5px;color:#7a9ab0;line-height:1.3;margin-top:2px}
+.tnode-status{display:flex;align-items:center;gap:4px;margin-top:4px}
+.tnode-dot{width:7px;height:7px;border-radius:999px;background:#1a2d45;flex-shrink:0}
+.tnode-dot.s-plan{background:#3b82f6}
+.tnode-dot.s-materials{background:#f59e0b}
+.tnode-dot.s-finished{background:#4ade80}
+.tnode.s-finished{background:rgba(74,222,128,.08)!important}
+.tnode.s-materials{background:rgba(251,191,36,.07)!important}
+.tnode.s-plan{background:rgba(29,78,216,.07)!important}
+.tnode.unavailable{opacity:0.3;filter:grayscale(0.6)}
+.tnode-lock{position:absolute;top:4px;right:5px;font-size:10px;background:rgba(5,10,20,.6);border-radius:3px;padding:1px 3px}
+
+/* DETAIL PANEL */
+#detail-panel{width:270px;flex-shrink:0;background:#070d16;border:1px solid var(--border);border-radius:10px;padding:15px;display:none;position:sticky;top:0}
+.dp-name{font-size:15px;font-weight:800;margin-bottom:5px;line-height:1.3;font-family:'Cinzel',serif}
+.dp-eff{font-size:13px;color:#9ab8cc;margin:7px 0}
+.dp-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:10px 0 4px;font-family:'Cinzel',serif}
+.dp-meta{font-size:12px;color:#8aabbf;font-weight:700;padding:2px 0}
+.dp-costs{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}
+.dp-sbrow{display:flex;gap:4px;margin-top:11px}
+.dp-sb{flex:1;padding:7px 4px;border-radius:7px;font-size:12px;font-weight:700;background:#0d1e30;color:var(--muted);border:1px solid var(--border);transition:all .15s;font-family:'Cinzel',serif}
+.dp-sb.active-plan{background:#1a3360;color:#7dd3fc;border-color:#1d4ed8}
+.dp-sb.active-mat{background:#2a1f00;color:#fbbf24;border-color:#92400e}
+.dp-sb.active-done{background:#052e16;color:#4ade80;border-color:#166534}
+
 footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color:var(--muted);font-size:14px;margin-top:40px}
 
 @media(max-width:800px){
@@ -168,6 +203,7 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
 
     <div class="view-tabs" id="view-tabs">
       <button class="vtab active" data-view="cards">📋 Cards</button>
+      <button class="vtab" data-view="tree">🌿 Tree</button>
       <button class="vtab" data-view="planner">📌 Planner<span class="plan-badge" id="plan-badge">0</span></button>
     </div>
 
@@ -186,6 +222,32 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
         <span class="count-lbl" id="cards-count"></span>
       </div>
       <div id="cards-grid" class="cards-grid"></div>
+    </div>
+
+    <div id="tree-view" style="display:none">
+      <div class="tree-layout">
+        <div id="tree-wrap">
+          <svg id="tree-svg"></svg>
+          <div id="tree-cols"></div>
+        </div>
+        <div id="detail-panel">
+          <div class="dp-name" id="dp-name"></div>
+          <div id="dp-badges" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px"></div>
+          <div class="dp-eff" id="dp-eff"></div>
+          <div class="dp-lbl">Prerequisite</div>
+          <div id="dp-prereq" style="font-size:12px;color:#7a9ab0;font-style:italic;padding:2px 0"></div>
+          <div class="dp-lbl">Building Requirements</div>
+          <div id="dp-breqs"></div>
+          <div class="dp-lbl">Items Needed</div>
+          <div class="dp-costs" id="dp-costs"></div>
+          <div class="dp-sbrow">
+            <button class="dp-sb" id="dp-plan">＋ Plan</button>
+            <button class="dp-sb" id="dp-mat">📦 Mat</button>
+            <button class="dp-sb" id="dp-done">✅ Done</button>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#1e3248;margin-top:7px">Click a node to see details · 🔒 = locked</div>
     </div>
 
     <div id="planner-view" style="display:none">
@@ -505,10 +567,101 @@ function renderBuildings(){
   });
 }
 
+// ── TREE VIEW ─────────────────────────────────────
+const CW=185,CG=36,NH=78,NG=7,HH=30,PAD=10;
+const LCOL=['','#64748b','#6366f1','#a855f7','#f59e0b','#ef4444','#10b981'];
+let selectedNode=null;
+
+function dfsOrder(tree){
+  const all=R.filter(r=>r.tree===tree);
+  const roots=all.filter(r=>!r.parent_id||!byId[r.parent_id]||byId[r.parent_id].tree!==tree);
+  const visited=new Set(),result=[];
+  function visit(r){if(visited.has(r.id))return;visited.add(r.id);result.push(r);all.filter(c=>c.parent_id===r.id).forEach(visit);}
+  roots.sort((a,b)=>a.uni_level-b.uni_level).forEach(visit);all.forEach(visit);
+  return result;
+}
+
+function renderTree(){
+  const colsDiv=document.getElementById('tree-cols'),svg=document.getElementById('tree-svg');
+  colsDiv.innerHTML='';svg.innerHTML='';
+  const ordered=dfsOrder(currentTree);
+  const cols={};
+  ordered.forEach(r=>{if(!cols[r.uni_level])cols[r.uni_level]=[];cols[r.uni_level].push(r)});
+  const maxCol=Math.max(...Object.keys(cols).map(Number));
+  const maxRows=Math.max(...Object.values(cols).map(a=>a.length));
+  const W=PAD*2+maxCol*(CW+CG)-CG,H=PAD*2+HH+NG+maxRows*(NH+NG);
+  colsDiv.style.cssText=`position:relative;width:${W}px;height:${H}px`;
+  svg.setAttribute('width',W);svg.setAttribute('height',H);
+  const pos={};
+  const unavail=getUnavailableIds();
+
+  for(let col=1;col<=maxCol;col++){
+    const nodes=cols[col]||[],x=PAD+(col-1)*(CW+CG);
+    const hdr=document.createElement('div');
+    hdr.className='tcol-hdr';
+    hdr.style.cssText=`left:${x}px;top:${PAD}px;width:${CW}px;height:${HH}px;color:${LCOL[col]||'#94a3b8'}`;
+    hdr.textContent=col===6?'★ Exclusive':'University Level '+col;
+    colsDiv.appendChild(hdr);
+    nodes.forEach((r,i)=>{
+      const y=PAD+HH+NG+i*(NH+NG);
+      const locked=!unavail.has(r.id)&&isLocked(r,unavail);
+      const st=getStatus(r.id),inPlan=planSet.has(r.id),isSel=selectedNode===r.id;
+      const sc=st?'s-'+st:inPlan?'s-plan':'';
+      const node=document.createElement('div');
+      node.className=`tnode lb${r.uni_level} ${sc} ${isSel?'selected':''} ${unavail.has(r.id)?'unavailable':''}`;
+      node.dataset.id=r.id;
+      node.style.cssText=`left:${x}px;top:${y}px;width:${CW}px;height:${NH}px`;
+      node.innerHTML=`
+        ${locked?'<div class="tnode-lock">🔒</div>':''}
+        ${unavail.has(r.id)?'<div class="tnode-lock">✖</div>':''}
+        <div class="tnode-name">${r.name}</div>
+        <div class="tnode-eff">${r.effect.length>58?r.effect.slice(0,55)+'…':r.effect}</div>
+        <div class="tnode-status"><div class="tnode-dot${inPlan?' s-plan':''}${st?' s-'+st:''}"></div></div>`;
+      node.addEventListener('click',()=>{selectedNode=r.id;renderDetailPanel(r.id);renderTree();});
+      colsDiv.appendChild(node);
+      pos[r.id]={rx:x+CW,ry:y+NH/2,lx:x,ly:y+NH/2};
+    });
+  }
+
+  R.filter(r=>r.tree===currentTree).forEach(r=>{
+    if(!r.parent_id||!pos[r.parent_id]||!pos[r.id])return;
+    const p=pos[r.parent_id],c=pos[r.id],mx=(p.rx+c.lx)/2;
+    const hi=planSet.has(r.id)&&planSet.has(r.parent_id);
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${p.rx},${p.ry} C${mx},${p.ry} ${mx},${c.ly} ${c.lx},${c.ly}`);
+    path.setAttribute('stroke',hi?'#1d4ed8':selectedNode===r.id||selectedNode===r.parent_id?'#7dd3fc55':'#182d44');
+    path.setAttribute('stroke-width',hi?'2':'1.5');
+    path.setAttribute('fill','none');
+    svg.appendChild(path);
+  });
+}
+
+function renderDetailPanel(id){
+  const r=byId[id];if(!r)return;
+  document.getElementById('detail-panel').style.display='';
+  document.getElementById('dp-name').textContent=r.name;
+  document.getElementById('dp-badges').innerHTML=`<span class="badge b${r.uni_level}">Uni Level ${r.uni_level}</span>${r.exclusive?'<span class="badge b6">★ Exclusive</span>':''}`;
+  document.getElementById('dp-eff').textContent=r.effect;
+  const pName=r.parent_id?byId[r.parent_id]?.name:null;
+  document.getElementById('dp-prereq').textContent=pName?`↳ ${pName}`:'None — root research';
+  const rb=getBreqs(id);
+  document.getElementById('dp-breqs').innerHTML=rb.length?rb.map(b=>`<div class="dp-meta">🏗️ ${b.building} Lv${b.level}</div>`).join(''):'<div style="font-size:12px;color:#3d5a70;font-style:italic">No building requirements</div>';
+  const rc=getCosts(id);
+  document.getElementById('dp-costs').innerHTML=rc.map(c=>pill(c.item,c.quantity)).join('');
+  const inPlan=planSet.has(id),st=getStatus(id);
+  document.getElementById('dp-plan').className=`dp-sb${inPlan?' active-plan':''}`;
+  document.getElementById('dp-mat').className=`dp-sb${st==='materials'?' active-mat':''}`;
+  document.getElementById('dp-done').className=`dp-sb${st==='finished'?' active-done':''}`;
+  document.getElementById('dp-plan').onclick=()=>{togglePlan(id);renderDetailPanel(id);};
+  document.getElementById('dp-mat').onclick=()=>{setStatus(id,'materials');renderDetailPanel(id);};
+  document.getElementById('dp-done').onclick=()=>{setStatus(id,'finished');renderDetailPanel(id);};
+}
+
 // ── RENDER ALL ────────────────────────────────────
 function renderAll(){
   if(currentTree==='buildings'){renderBuildings();return;}
   if(currentView==='cards')renderCards();
+  else if(currentView==='tree')renderTree();
   renderPlanner();
 }
 
@@ -516,9 +669,12 @@ function renderAll(){
 document.querySelectorAll('.tnav').forEach(btn=>btn.addEventListener('click',()=>{
   document.querySelectorAll('.tnav').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');currentTree=btn.dataset.tree;
+  selectedNode=null;
+  document.getElementById('detail-panel').style.display='none';
   const isRes=currentTree!=='buildings';
   document.getElementById('view-tabs').style.display=isRes?'flex':'none';
   document.getElementById('cards-view').style.display=isRes&&currentView==='cards'?'block':'none';
+  document.getElementById('tree-view').style.display=isRes&&currentView==='tree'?'block':'none';
   document.getElementById('planner-view').style.display=isRes&&currentView==='planner'?'block':'none';
   document.getElementById('buildings-view').style.display=!isRes?'block':'none';
   renderAll();
@@ -528,6 +684,7 @@ document.querySelectorAll('.vtab').forEach(btn=>btn.addEventListener('click',()=
   document.querySelectorAll('.vtab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');currentView=btn.dataset.view;
   document.getElementById('cards-view').style.display=currentView==='cards'?'block':'none';
+  document.getElementById('tree-view').style.display=currentView==='tree'?'block':'none';
   document.getElementById('planner-view').style.display=currentView==='planner'?'block':'none';
   renderAll();
 }));
