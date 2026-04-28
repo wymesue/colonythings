@@ -341,13 +341,38 @@ const pill=(i,n)=>`<span class="pill">${emo(i)} <strong>${n}</strong> ${i}</span
 const chip=(i,n)=>`<span class="ichip"><span class="cnt">×${n.toLocaleString()}</span>${emo(i)} ${i}</span>`;
 
 // ── BUILDING CATEGORIES ───────────────────────────
+// Each item is {n: name, m: maxLevel} — default max is 5
 const BLDG_CATS=[
-  {cat:'🏛️ Fundamentals',items:['Town Hall',"Builder's Hut",'Residence','Dining Hall','Hospital',"Forester's Hut",'Mine','Quarry','Tavern']},
-  {cat:'🌾 Agriculture',items:["Farmer's Hut","Fisher's Hut",'Apiary',"Cowhand's Hut","Shepherd's Hut","Swineherd's Hut","Chicken Farmer's Hut",'Rabbit Hutch',"Composter's Hut",'Flower Shop','Plantation']},
-  {cat:'⚙️ Craftsmanship',items:['Warehouse',"Courier's Hut","Sawmill","Blacksmith's Hut","Smeltery",'Brick Yard',"Stonemason's Hut","Crusher's Hut","Mechanic's Hut","Glassblower's Hut","Dyer's Hut","Fletcher's Hut","Concrete Mixer's Hut","Sifter's Hut",'Bakery',"Chef's Kitchen",'Alchemist Laboratory']},
-  {cat:'📚 Education',items:['University','Library','School']},
-  {cat:'⚔️ Military',items:['Guard Tower','Barracks','Combat Academy','Archery','Gatehouse']},
-  {cat:'🔮 Mystic',items:["Enchanter's Tower",'Graveyard','Mystical Site','Nether Mine']},
+  {cat:'🏛️ Fundamentals',items:[
+    {n:'Town Hall',m:5},{n:"Builder's Hut",m:5},{n:'Residence',m:5},
+    {n:'Dining Hall',m:5},{n:'Hospital',m:5},{n:"Forester's Hut",m:5},
+    {n:'Mine',m:5},{n:'Quarry',m:3},{n:'Tavern',m:3}
+  ]},
+  {cat:'🌾 Agriculture',items:[
+    {n:"Farmer's Hut",m:5},{n:"Fisher's Hut",m:5},{n:'Apiary',m:5},
+    {n:"Cowhand's Hut",m:5},{n:"Shepherd's Hut",m:5},{n:"Swineherd's Hut",m:5},
+    {n:"Chicken Farmer's Hut",m:5},{n:'Rabbit Hutch',m:5},{n:"Composter's Hut",m:5},
+    {n:'Flower Shop',m:5},{n:'Plantation',m:5}
+  ]},
+  {cat:'⚙️ Craftsmanship',items:[
+    {n:'Warehouse',m:5},{n:"Courier's Hut",m:5},{n:'Sawmill',m:5},
+    {n:"Blacksmith's Hut",m:5},{n:'Smeltery',m:5},{n:'Brick Yard',m:5},
+    {n:"Stonemason's Hut",m:5},{n:"Crusher's Hut",m:5},{n:"Mechanic's Hut",m:5},
+    {n:"Glassblower's Hut",m:5},{n:"Dyer's Hut",m:5},{n:"Fletcher's Hut",m:5},
+    {n:"Concrete Mixer's Hut",m:5},{n:"Sifter's Hut",m:5},{n:'Bakery',m:5},
+    {n:"Chef's Kitchen",m:5},{n:'Alchemist Laboratory',m:5}
+  ]},
+  {cat:'📚 Education',items:[
+    {n:'University',m:5},{n:'Library',m:5},{n:'School',m:5}
+  ]},
+  {cat:'⚔️ Military',items:[
+    {n:'Guard Tower',m:5},{n:'Barracks',m:5},{n:'Combat Academy',m:5},
+    {n:'Archery',m:5},{n:'Gatehouse',m:5}
+  ]},
+  {cat:'🔮 Mystic',items:[
+    {n:"Enchanter's Tower",m:5},{n:'Graveyard',m:5},{n:'Mystical Site',m:5},
+    {n:'Nether Mine',m:5}
+  ]},
 ];
 
 const LEVEL_COLORS=['','#64748b','#6366f1','#a855f7','#f59e0b','#ef4444','#10b981'];
@@ -555,9 +580,10 @@ function renderBuildings(){
   BLDG_CATS.forEach(cat=>{
     const sec=document.createElement('div');sec.className='bld-section';
     let html=`<div class="bld-cat">${cat.cat}</div><div class="bld-grid">`;
-    cat.items.forEach(k=>{
-      const cur=getBld(k);
-      const btns=[0,1,2,3,4,5].map(l=>`<button class="lvl-btn${cur===l?' active'+(l===0?' lv0':''):''}" data-k="${k}" data-l="${l}">${l===0?'—':l}</button>`).join('');
+    cat.items.forEach(bld=>{
+      const k=bld.n,max=bld.m,cur=getBld(k);
+      const levels=[0,...Array.from({length:max},(_,i)=>i+1)];
+      const btns=levels.map(l=>`<button class="lvl-btn${cur===l?' active'+(l===0?' lv0':''):''}" data-k="${k}" data-l="${l}">${l===0?'—':l}</button>`).join('');
       html+=`<div class="bld-card"><div class="bld-name">${k}</div><div class="lvl-btns">${btns}</div></div>`;
     });
     html+='</div>';
