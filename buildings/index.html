@@ -262,17 +262,22 @@
         .loot-table .col-amt { color: var(--accent); }
         .loot-table .col-lvl { color: var(--text-dim); }
         .loot-table .col-pct { color: var(--text-dim); font-size: 0.82rem; }
-        .weight-bar {
-            width: 100px; height: 5px;
-            background: var(--border);
+        .src-level {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-family: 'Cinzel', serif;
+            color: var(--text-dim);
+            border: 1px solid var(--border);
             border-radius: 3px;
-            overflow: hidden;
+            padding: 0.1rem 0.35rem;
+            margin-left: 0.4rem;
+            vertical-align: middle;
         }
-        .weight-fill {
-            height: 100%;
-            background: var(--accent);
-            border-radius: 3px;
-            transition: width 0.3s;
+        .loot-note {
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            font-style: italic;
+            margin-bottom: 1rem;
         }
 
         /* ─── Loading / empty ─── */
@@ -545,9 +550,23 @@ function cap(str) {
     return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
+// Sources where higher levels include all lower level drops too
+const CUMULATIVE_SOURCES = ['enchanter', 'nether_mine', 'miner', 'fisher'];
+
+function detailLevel(d) {
+    // Extract the trailing number from any source_detail string
+    const m = d.match(/(\d+)$/);
+    return m ? parseInt(m[1]) : null;
+}
+
+function isCumulative(src) {
+    return CUMULATIVE_SOURCES.includes(src);
+}
+
 function renderLootSubTabs() {
     const el = document.getElementById('loot-sub-tabs');
-    const details = [...new Set(lootRows.filter(r => r.source === activeLootSource).map(r => r.source_detail))].sort();
+    const sourceRows = lootRows.filter(r => r.source === activeLootSource);
+    const details = [...new Set(sourceRows.map(r => r.source_detail))].sort();
 
     if (details.length <= 1) {
         el.innerHTML = '';
@@ -555,7 +574,7 @@ function renderLootSubTabs() {
         return;
     }
 
-    if (!activeLootSub || !details.includes(activeLootSub)) activeLootSub = details[0];
+    if (!activeLootSub || !details.includes(activeLootSub)) activeLootSub = details[details.length - 1]; // default to highest
 
     el.innerHTML = details.map(d => `
         <button class="loot-sub-btn${d === activeLootSub ? ' active' : ''}" data-sub="${d}">
@@ -576,7 +595,21 @@ function renderLootSubTabs() {
 function renderLootTable() {
     const container = document.getElementById('loot-container');
     let rows = lootRows.filter(r => r.source === activeLootSource);
-    if (activeLootSub) rows = rows.filter(r => r.source_detail === activeLootSub);
+
+    let cumulative = false;
+    if (isCumulative(activeLootSource) && activeLootSub) {
+        const selectedLevel = detailLevel(activeLootSub);
+        if (selectedLevel !== null) {
+            // Include all rows from levels <= selected level
+            rows = rows.filter(r => {
+                const lvl = detailLevel(r.source_detail);
+                return lvl !== null && lvl <= selectedLevel;
+            });
+            cumulative = selectedLevel > (detailLevel(rows.map(r=>r.source_detail).sort()[0]) || 1);
+        }
+    } else if (activeLootSub) {
+        rows = rows.filter(r => r.source_detail === activeLootSub);
+    }
 
     if (!rows.length) {
         container.innerHTML = '<div class="loading">No loot data found.</div>';
@@ -584,32 +617,36 @@ function renderLootTable() {
     }
 
     const totalWeight = rows.reduce((s, r) => s + (r.weight || 0), 0);
-    const hasLevel = rows.some(r => r.min_building_level != null);
+    const hasMinLevel = rows.some(r => r.min_building_level != null);
+    const showSrcLevel = isCumulative(activeLootSource);
 
     rows = [...rows].sort((a, b) => (b.weight || 0) - (a.weight || 0));
 
     container.innerHTML = `
+        ${cumulative ? `<p class="loot-note">Showing all drops available at this level — higher levels add more items, which lowers individual drop chances.</p>` : ''}
         <table class="loot-table">
             <thead>
                 <tr>
                     <th>Item</th>
                     <th>Amount</th>
-                    ${hasLevel ? '<th>Min Level</th>' : ''}
+                    ${hasMinLevel ? '<th>Min Bldg Level</th>' : ''}
                     <th>Chance</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 ${rows.map(r => {
-                    const pct = totalWeight > 0 ? Math.round((r.weight / totalWeight) * 100) : 0;
+                    const pct = totalWeight > 0 ? ((r.weight / totalWeight) * 100).toFixed(1) : '0.0';
                     const amt = r.min_amount === r.max_amount ? r.min_amount : `${r.min_amount}–${r.max_amount}`;
+                    const srcLvl = detailLevel(r.source_detail);
                     return `
                         <tr>
-                            <td class="col-item">${r.item}</td>
+                            <td class="col-item">
+                                ${r.item}
+                                ${showSrcLevel && srcLvl ? `<span class="src-level">L${srcLvl}</span>` : ''}
+                            </td>
                             <td class="col-amt">${amt}</td>
-                            ${hasLevel ? `<td class="col-lvl">${r.min_building_level ?? '—'}</td>` : ''}
+                            ${hasMinLevel ? `<td class="col-lvl">${r.min_building_level ?? '—'}</td>` : ''}
                             <td class="col-pct">${pct}%</td>
-                            <td><div class="weight-bar"><div class="weight-fill" style="width:${pct}%"></div></div></td>
                         </tr>
                     `;
                 }).join('')}
