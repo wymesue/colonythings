@@ -28,31 +28,29 @@
 
         /* ─── Nav ─── */
         nav {
-            background: var(--card);
-            border-bottom: 1px solid var(--border);
-            padding: 0.75rem 2rem;
+            padding: 20px 0;
             display: flex;
             align-items: center;
-            gap: 2rem;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 28px;
         }
-        .nav-brand {
+        .nav-logo {
             font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
-            color: var(--gold);
-            text-decoration: none;
+            font-size: 18px;
             font-weight: 700;
+            color: var(--accent);
+            letter-spacing: .5px;
+            text-decoration: none;
         }
-        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links { display: flex; gap: 24px; list-style: none; }
         .nav-links a {
+            font-size: 14px;
             color: var(--text-dim);
             text-decoration: none;
-            font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
-            letter-spacing: 0.05em;
             transition: color 0.2s;
         }
-        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
-
+        .nav-links a:hover, .nav-links a.active { color: var(--text); }
         /* ─── Page header ─── */
         .page-header {
             padding: 2.5rem 2rem 1rem;
@@ -309,16 +307,18 @@
 </head>
 <body>
 
+<div style="max-width:1200px;margin:0 auto;padding:0 2rem">
 <nav>
-    <a href="/" class="nav-brand">Colony Things</a>
+    <a href="/" class="nav-logo">Colony Things</a>
     <ul class="nav-links">
-        <li><a href="/recipes">Recipes</a></li>
         <li><a href="/university">University</a></li>
-        <li><a href="/food">Food Planner</a></li>
+        <li><a href="/food">Food</a></li>
+        <li><a href="/recipes">Recipes</a></li>
         <li><a href="/buildings" class="active">Buildings</a></li>
     </ul>
 </nav>
-<script>if(sessionStorage.getItem("colonyCode")){const li=document.createElement("li");li.innerHTML="<a href=\"/colony\" style=\"color:var(--gold)\">🏰 Dashboard</a>";document.querySelector(".nav-links").appendChild(li);}</script>
+<script>if(sessionStorage.getItem('colonyCode')){const li=document.createElement('li');li.innerHTML='<a href="/colony" style="color:var(--gold)">🏰 Dashboard</a>';document.querySelector('.nav-links').appendChild(li);}</script>
+</div>
 
 <div class="page-header">
     <h1>Buildings Encyclopedia</h1>
