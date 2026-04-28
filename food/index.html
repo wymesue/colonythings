@@ -18,12 +18,54 @@ body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',Georgia,se
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(125,189,232,.06) 0%,transparent 60%);pointer-events:none;z-index:0}
 .wrap{max-width:1400px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
 
-nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:28px}
+nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:0}
 .nav-logo{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--accent);letter-spacing:.5px;text-decoration:none}
 .nav-links{display:flex;gap:24px;list-style:none}
 .nav-links a{font-size:14px;color:var(--muted);text-decoration:none;transition:color .2s}
 .nav-links a:hover{color:var(--text)}
 .nav-links a.active{color:var(--accent)}
+
+/* ── COLONY BAR ── */
+.colony-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:#070f1a;border-bottom:1px solid var(--border);
+  padding:10px 0;margin-bottom:24px;gap:12px;
+}
+.colony-bar-info{display:flex;align-items:center;gap:10px}
+.colony-bar-icon{font-size:18px}
+.colony-bar-name{font-family:'Cinzel',serif;font-size:14px;color:var(--gold);font-weight:700}
+.colony-bar-code{font-size:12px;color:var(--muted);font-style:italic}
+.save-btn{
+  padding:8px 20px;border-radius:7px;
+  font-family:'Cinzel',serif;font-size:13px;font-weight:600;
+  background:var(--gold);color:#0a0e14;border:none;cursor:pointer;
+  transition:all .2s;letter-spacing:.3px;
+}
+.save-btn:hover{background:#d4b870;transform:translateY(-1px)}
+.save-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ── SAVE DIALOG ── */
+.dialog-overlay{
+  position:fixed;inset:0;background:rgba(5,10,20,.75);
+  display:flex;align-items:center;justify-content:center;
+  z-index:100;opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.dialog-overlay.show{opacity:1;pointer-events:all}
+.dialog{
+  background:#0d1420;border:1px solid var(--border);border-radius:12px;
+  padding:28px 32px;text-align:center;max-width:340px;width:90%;
+  transform:translateY(10px);transition:transform .2s;
+}
+.dialog-overlay.show .dialog{transform:translateY(0)}
+.dialog-icon{font-size:36px;margin-bottom:10px}
+.dialog-title{font-family:'Cinzel',serif;font-size:17px;color:var(--green);margin-bottom:6px;font-weight:700}
+.dialog-msg{font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.5}
+.dialog-close{
+  padding:8px 24px;border-radius:7px;font-family:'Cinzel',serif;
+  font-size:13px;font-weight:600;background:var(--accent);color:#0a0e14;
+  border:none;cursor:pointer;transition:background .2s;
+}
+.dialog-close:hover{background:#9acfee}
 
 .page-eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px}
 .page-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;color:var(--text);margin-bottom:4px}
@@ -129,6 +171,7 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
 @media(max-width:900px){
   .meals-layout{grid-template-columns:1fr}
   nav{flex-direction:column;gap:12px}
+  .colony-bar{flex-direction:column;align-items:flex-start;gap:8px}
 }
 </style>
 </head>
@@ -143,6 +186,18 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
       <li><a href="/buildings">Buildings</a></li>
     </ul>
   </nav>
+
+  <!-- COLONY BAR -->
+  <div class="colony-bar" id="colony-bar" style="display:none">
+    <div class="colony-bar-info">
+      <span class="colony-bar-icon">🏰</span>
+      <div>
+        <div class="colony-bar-name" id="colony-bar-name"></div>
+        <div class="colony-bar-code" id="colony-bar-code"></div>
+      </div>
+    </div>
+    <button class="save-btn" id="save-btn" onclick="saveColony()">💾 Save Progress</button>
+  </div>
 
   <div class="page-eyebrow">Planning Tool</div>
   <div class="page-title">🍖 Food Planner</div>
@@ -245,24 +300,144 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
   </footer>
 </div>
 
+<!-- SAVE DIALOG -->
+<div class="dialog-overlay" id="save-dialog">
+  <div class="dialog">
+    <div class="dialog-icon">✅</div>
+    <div class="dialog-title">Progress Saved</div>
+    <div class="dialog-msg" id="dialog-msg">Your food planner progress has been saved.</div>
+    <button class="dialog-close" onclick="closeDialog()">OK</button>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL='https://lihxhwcrlnvsqpfqtggc.supabase.co';
 const SUPABASE_KEY='sb_publishable_OfZ9MzjXjDGime_xNJj7hA_Bi5-EQ8V';
-const H={'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`};
+const H={'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json'};
+
+// ── COLONY SESSION ────────────────────────────────
+const COLONY_CODE = sessionStorage.getItem('colonyCode') || null;
+const COLONY_NAME = sessionStorage.getItem('colonyName') || null;
 
 let biomes=[],biomeCropsData=[],recipes=[],ingredients=[];
 let biomeById={},cropToBiome={};
 let recipeNames=new Set();
 
+// ── STATE ─────────────────────────────────────────
 const selectedBiomes=new Set(['all']);
-const checkedIngs=new Set(['Large Water Bottle','Bowl','Stick','Large Milk Bottle']);
+// Only always-available items pre-checked — Large Milk Bottle removed
+const ALWAYS_INGS=['Large Water Bottle','Bowl','Stick'];
+const checkedIngs=new Set([...ALWAYS_INGS]);
 const plannedMeals=new Set();
 const planData={};
 
 const ANIMAL_INGS=['Large Milk Bottle','Beef','Porkchop','Mutton','Chicken','Rabbit','Egg','Salmon','Cod','Honey Bottle'];
 const VANILLA_INGS=['Potato','Carrot','Beetroot','Apple','Sweet Berries','Sugar','Brown Mushroom','Kelp','Dried Kelp','Pumpkin'];
-const ALWAYS_INGS=['Large Water Bottle','Bowl','Stick'];
 
+// ── COLONY BAR ────────────────────────────────────
+function initColonyBar(){
+  if(!COLONY_CODE) return;
+  document.getElementById('colony-bar').style.display='flex';
+  document.getElementById('colony-bar-name').textContent=COLONY_NAME||'My Colony';
+  document.getElementById('colony-bar-code').textContent=COLONY_CODE;
+}
+
+// ── LOAD COLONY DATA ──────────────────────────────
+async function loadColonyData(){
+  if(!COLONY_CODE) return;
+  try{
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/colony_saves?colony_code=eq.${encodeURIComponent(COLONY_CODE)}&select=save_data`,{headers:H});
+    const rows=await res.json();
+    if(!rows||!rows.length||!rows[0].save_data) return;
+    const sd=rows[0].save_data;
+
+    // Restore biomes
+    if(sd.biomes&&Array.isArray(sd.biomes)){
+      selectedBiomes.clear();
+      selectedBiomes.add('all'); // always keep 'all' for universal crops logic
+      sd.biomes.forEach(b=>selectedBiomes.add(b));
+    }
+
+    // Restore checked ingredients (only non-always ones)
+    if(sd.ingredients){
+      Object.entries(sd.ingredients).forEach(([ing,checked])=>{
+        if(checked) checkedIngs.add(ing);
+        else checkedIngs.delete(ing);
+      });
+    }
+
+    // Restore planned meals by name
+    if(sd.planned_meals&&Array.isArray(sd.planned_meals)){
+      // We'll match names after recipes are loaded — store for later
+      window._pendingMeals=sd.planned_meals;
+    }
+  }catch(e){
+    console.error('Failed to load colony data',e);
+  }
+}
+
+// ── SAVE COLONY DATA ──────────────────────────────
+async function saveColony(){
+  if(!COLONY_CODE) return;
+  const btn=document.getElementById('save-btn');
+  btn.disabled=true;
+  btn.textContent='Saving…';
+
+  // Biomes — save selected biomes excluding 'all' (that's always included)
+  const biomesToSave=[...selectedBiomes].filter(b=>b!=='all');
+
+  // Ingredients — save only the manually checkable ones (animal + vanilla)
+  const saveableIngs=[...ANIMAL_INGS,...VANILLA_INGS];
+  const ingredientsToSave={};
+  saveableIngs.forEach(ing=>{ ingredientsToSave[ing]=checkedIngs.has(ing); });
+
+  // Planned meals — save by name
+  const plannedMealNames=[...plannedMeals].map(id=>planData[id]?.name).filter(Boolean);
+
+  try{
+    // Fetch existing save to preserve buildings/research
+    const getRes=await fetch(`${SUPABASE_URL}/rest/v1/colony_saves?colony_code=eq.${encodeURIComponent(COLONY_CODE)}&select=save_data`,{headers:H});
+    const existing=await getRes.json();
+    const existingSd=(existing&&existing[0]&&existing[0].save_data)||{};
+
+    const merged={
+      ...existingSd,
+      biomes:biomesToSave,
+      ingredients:ingredientsToSave,
+      planned_meals:plannedMealNames,
+    };
+
+    const patchRes=await fetch(`${SUPABASE_URL}/rest/v1/colony_saves?colony_code=eq.${encodeURIComponent(COLONY_CODE)}`,{
+      method:'PATCH',
+      headers:{...H,'Prefer':'return=minimal'},
+      body:JSON.stringify({save_data:merged,last_accessed:new Date().toISOString()})
+    });
+
+    btn.disabled=false;
+    btn.textContent='💾 Save Progress';
+
+    if(patchRes.ok){
+      document.getElementById('dialog-msg').textContent=`Biomes, ingredients, and meal plan saved for ${COLONY_NAME||'your colony'}.`;
+      document.getElementById('save-dialog').classList.add('show');
+    }else{
+      alert('Save failed. Please try again.');
+    }
+  }catch(e){
+    console.error('Save error',e);
+    btn.disabled=false;
+    btn.textContent='💾 Save Progress';
+    alert('Save failed. Please check your connection.');
+  }
+}
+
+function closeDialog(){
+  document.getElementById('save-dialog').classList.remove('show');
+}
+document.getElementById('save-dialog').addEventListener('click',function(e){
+  if(e.target===this) closeDialog();
+});
+
+// ── LOAD DATA ─────────────────────────────────────
 async function loadData(){
   try{
     const[r1,r2,r3,r4]=await Promise.all([
@@ -281,6 +456,19 @@ async function loadData(){
       if(b){if(!cropToBiome[bc.crop])cropToBiome[bc.crop]=[];cropToBiome[bc.crop].push(b.name);}
     });
     recipes.forEach(r=>recipeNames.add(r.name));
+
+    // Load colony data before rendering
+    await loadColonyData();
+
+    // Restore planned meals by name now that recipes are loaded
+    if(window._pendingMeals){
+      window._pendingMeals.forEach(name=>{
+        const r=recipes.find(r=>r.name===name);
+        if(r){plannedMeals.add(r.id);planData[r.id]={name:r.name,level:r.level};}
+      });
+      delete window._pendingMeals;
+    }
+
     document.getElementById('app-loading').style.display='none';
     document.getElementById('app').style.display='';
     renderAll();
@@ -314,7 +502,6 @@ function getAllAvailable(){
 }
 
 function getRecipeIngs(id){return ingredients.filter(i=>i.recipe_id===id)}
-
 function canMake(r,avail){return getRecipeIngs(r.id).every(i=>avail.has(i.ingredient))}
 
 function getBiomesForRecipe(recipeId){
@@ -346,7 +533,7 @@ function formatIngs(recipeId,avail,showMissing){
   }).join('<span style="color:#1e3048"> · </span>');
 }
 
-// ── BIOMES ──────────────────────────────────────────
+// ── BIOMES ────────────────────────────────────────
 function renderBiomes(){
   const allBiome=biomes.find(b=>b.name==='all');
   const otherBiomes=biomes.filter(b=>b.name!=='all');
@@ -372,18 +559,16 @@ function renderBiomes(){
   });
 }
 
-// ── INGREDIENTS ──────────────────────────────────────
+// ── INGREDIENTS ───────────────────────────────────
 function renderIngredients(){
   const availCrops=getAvailableCrops();
 
-  // Have crops box
   const haveCrops=[...availCrops].filter(c=>cropToBiome[c]&&!cropToBiome[c].includes('all'));
   const haveBox=document.getElementById('have-crops-list');
   haveBox.innerHTML=haveCrops.length
     ?haveCrops.map(c=>`<span class="biome-crop-tag have">${c}</span>`).join('')
     :'<div class="have-crops-empty">No biomes selected yet — go to the 🌍 Biomes tab!</div>';
 
-  // Biome crops list
   const allBiomeCrops=biomeCropsData
     .filter(bc=>biomeById[bc.biome_id]?.name!=='all')
     .map(bc=>bc.crop)
@@ -397,18 +582,14 @@ function renderIngredients(){
     </div>`;
   }).join('');
 
-  // Animal
   document.getElementById('ing-animal-list').innerHTML=ANIMAL_INGS.map(ing=>ingRow(ing)).join('');
-  // Vanilla
   document.getElementById('ing-vanilla-list').innerHTML=VANILLA_INGS.map(ing=>ingRow(ing)).join('');
-  // Always
   document.getElementById('ing-always-list').innerHTML=ALWAYS_INGS.map(ing=>`
     <div class="ing-row">
       <input type="checkbox" checked disabled/>
       <label>${ing} <span class="ing-note">(always available)</span></label>
     </div>`).join('');
 
-  // Bind checkboxes
   document.querySelectorAll('#tab-ingredients input[type=checkbox]:not([disabled])').forEach(cb=>{
     cb.addEventListener('change',()=>{
       const label=cb.nextElementSibling.textContent.trim().split('(')[0].trim();
@@ -426,7 +607,7 @@ function ingRow(ing){
   </div>`;
 }
 
-// ── MEALS ──────────────────────────────────────────
+// ── MEALS ─────────────────────────────────────────
 function renderMeals(){
   const avail=getAllAvailable();
   const levels=[5,3,1];
@@ -442,27 +623,21 @@ function renderMeals(){
   document.getElementById('avail-count').textContent=`(${makeable.length})`;
   document.getElementById('notyet-count').textContent=`(${notyet.length})`;
 
-  // AVAILABLE tab
-  let html='';
-  let anyAvail=false;
+  let html='';let anyAvail=false;
   for(const lvl of levels){
     const group=makeable.filter(r=>r.level===lvl);
     if(!group.length)continue;
     anyAvail=true;
-    const i=info[lvl];
-    html+=mealSection(group,i,avail,false);
+    html+=mealSection(group,info[lvl],avail,false);
   }
   document.getElementById('meals-available').innerHTML=anyAvail?html:'<div class="no-meals">No recipes available yet — set your biomes and ingredients first!</div>';
 
-  // NOT YET tab
-  let html2='';
-  let anyNotYet=false;
+  let html2='';let anyNotYet=false;
   for(const lvl of levels){
     const group=notyet.filter(r=>r.level===lvl);
     if(!group.length)continue;
     anyNotYet=true;
-    const i=info[lvl];
-    html2+=mealSection(group,i,avail,true);
+    html2+=mealSection(group,info[lvl],avail,true);
   }
   document.getElementById('meals-notyet').innerHTML=anyNotYet?html2:'<div class="no-meals">🎉 You can make everything! Your colony eats well.</div>';
 
@@ -542,7 +717,7 @@ function renderAll(){
   renderMeals();
 }
 
-// ── MAIN TABS ──────────────────────────────────────
+// ── MAIN TABS ─────────────────────────────────────
 document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
@@ -550,7 +725,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',
   document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
 }));
 
-// ── SUB TABS ───────────────────────────────────────
+// ── SUB TABS ──────────────────────────────────────
 function bindSubTabs(navId,prefix){
   document.querySelectorAll(`#${navId} .sub-tab-btn`).forEach(btn=>btn.addEventListener('click',()=>{
     document.querySelectorAll(`#${navId} .sub-tab-btn`).forEach(b=>b.classList.remove('active'));
@@ -564,6 +739,8 @@ function bindSubTabs(navId,prefix){
 bindSubTabs('ing-sub-nav','tab-ingredients');
 bindSubTabs('meals-sub-nav','tab-meals');
 
+// ── INIT ──────────────────────────────────────────
+initColonyBar();
 loadData();
 </script>
 </body>
