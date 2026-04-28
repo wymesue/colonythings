@@ -163,10 +163,10 @@ nav{
   gap:10px;
 }
 .recipe-card{
-  background:var(--card);
+  background:#060c14;
   border:1px solid var(--border);
   border-radius:10px;
-  padding:14px 16px;
+  padding:18px 20px;
   transition:border-color .15s;
 }
 .recipe-card:hover{border-color:#2a4060}
@@ -201,11 +201,11 @@ nav{
 .crafter-Baker{background:rgba(201,168,76,.1);color:#c9a84c;border:1px solid rgba(201,168,76,.25)}
 .crafter-Chef{background:rgba(192,80,74,.1);color:#d47070;border:1px solid rgba(192,80,74,.25)}
 .recipe-ingredients{
-  font-size:13px;
-  color:#8aabbf;
-  line-height:1.5;
+  font-size:14px;
+  color:var(--text);
+  line-height:1.6;
 }
-.recipe-ingredients strong{color:var(--text)}
+.recipe-ingredients strong{color:var(--accent)}
 .biome-note{
   font-size:11px;
   color:var(--amber);
@@ -352,7 +352,7 @@ function render(){
         <div class="recipe-grid">
           ${group.map(r => {
             const ings = getIngredients(r.id);
-            const biomeNote = r.biome_required ? `Requires ${BIOME_NAMES[r.biome_required]||r.biome_required} biome` : '';
+            const biomeNote = (r.biome_required && r.biome_required !== 'all') ? `Requires ${BIOME_NAMES[r.biome_required]||r.biome_required} biome` : '';
             const notesText = r.notes ? r.notes : '';
             return `
               <div class="recipe-card ${info.cls}">
