@@ -79,6 +79,7 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
       <li><a href="/buildings">Buildings</a></li>
     </ul>
   </nav>
+  <script>if(sessionStorage.getItem('colonyCode')){const li=document.createElement('li');li.innerHTML='<a href="/colony" style="color:var(--gold)">🏰 Dashboard</a>';document.querySelector('.nav-links').appendChild(li);}</script>
   <div class="page-header">
     <div class="page-eyebrow">Quick Reference</div>
     <div class="page-title">📜 Recipe Reference</div>
