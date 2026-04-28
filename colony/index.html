@@ -288,7 +288,9 @@ function renderResearch(research,researchRows){
   const counts={civilian:{done:0,materials:0,plan:0},combat:{done:0,materials:0,plan:0},technology:{done:0,materials:0,plan:0}};
   Object.entries(research).forEach(([id,status])=>{
     const tree=treeMap[parseInt(id)];
-    if(tree&&counts[tree]&&status) counts[tree][status]=(counts[tree][status]||0)+1;
+    // 'finished' in save_data maps to 'done' in counts
+    const key=status==='finished'?'done':status;
+    if(tree&&counts[tree]&&key) counts[tree][key]=(counts[tree][key]||0)+1;
   });
   const trees=['civilian','combat','technology'];
   const labels={civilian:'🏘️ Civilian',combat:'⚔️ Combat',technology:'⚙️ Technology'};
