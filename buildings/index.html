@@ -660,7 +660,12 @@ function renderLootTable() {
     }
 
     const dedupedTotal = deduped.reduce((s, r) => s + (r.weight || 0), 0);
-    deduped.sort((a, b) => (b.weight || 0) - (a.weight || 0));
+    deduped.sort((a, b) => {
+        const lvlA = detailLevel(a.source_detail) || 0;
+        const lvlB = detailLevel(b.source_detail) || 0;
+        if (lvlB !== lvlA) return lvlB - lvlA;
+        return (b.weight || 0) - (a.weight || 0);
+    });
 
     const sourceNote = SOURCE_NOTES[activeLootSource] || '';
 
