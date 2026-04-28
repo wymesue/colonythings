@@ -29,8 +29,7 @@ nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between
 .colony-hero{
   background:var(--dark);border:1px solid var(--border);border-radius:14px;
   padding:28px 32px;margin-bottom:24px;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  flex-wrap:wrap;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
 }
 .colony-hero-left{display:flex;align-items:center;gap:16px}
 .colony-icon{font-size:48px}
@@ -39,25 +38,17 @@ nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between
 .colony-accessed{font-size:12px;color:#3d5a70}
 .colony-hero-tools{display:flex;gap:8px;flex-wrap:wrap}
 .tool-link{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:8px 16px;border-radius:8px;
+  display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;
   font-family:'Cinzel',serif;font-size:12px;font-weight:600;
   border:1px solid var(--border);background:var(--card);
   color:var(--muted);text-decoration:none;transition:all .2s;
 }
 .tool-link:hover{border-color:var(--accent);color:var(--accent)}
 
-/* DASHBOARD GRID */
-.dash-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-  margin-bottom:40px;
-}
-.dash-card{
-  background:var(--dark);border:1px solid var(--border);border-radius:12px;padding:20px;
-}
-.dash-card.full{grid-column:1/-1}
+/* LAYOUT */
+.dash-top{margin-bottom:16px}
+.dash-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px;align-items:start}
+.dash-card{background:var(--dark);border:1px solid var(--border);border-radius:12px;padding:20px}
 .dash-card-title{
   font-family:'Cinzel',serif;font-size:13px;font-weight:700;
   color:var(--muted);text-transform:uppercase;letter-spacing:.5px;
@@ -70,12 +61,12 @@ nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between
 }
 .dash-card-title a:hover{background:rgba(125,189,232,.08)}
 
-/* RESEARCH SUMMARY */
+/* RESEARCH */
 .research-bars{display:flex;flex-direction:column;gap:10px}
 .res-tree{display:flex;align-items:center;gap:10px}
-.res-tree-name{font-family:'Cinzel',serif;font-size:12px;width:90px;flex-shrink:0}
+.res-tree-name{font-family:'Cinzel',serif;font-size:12px;width:100px;flex-shrink:0}
 .res-bar-wrap{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;display:flex}
-.res-bar-done{height:100%;background:var(--green);border-radius:4px 0 0 4px}
+.res-bar-done{height:100%;background:var(--green)}
 .res-bar-mat{height:100%;background:var(--amber)}
 .res-bar-plan{height:100%;background:#3b82f6}
 .res-counts{font-size:11px;color:var(--muted);white-space:nowrap;width:80px;text-align:right}
@@ -83,70 +74,62 @@ nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between
 .res-legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
 .res-legend-dot{width:8px;height:8px;border-radius:2px}
 
-/* BUILDINGS */
-.bld-list{display:flex;flex-direction:column;gap:4px}
-.bld-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(30,48,72,.5);font-size:13px}
+/* ACCORDION */
+.accord{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:6px}
+.accord:last-child{margin-bottom:0}
+.accord-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;cursor:pointer;background:#0a1520;
+  font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--text);
+  transition:background .15s;user-select:none;
+}
+.accord-hdr:hover{background:#0d1a2a}
+.accord-hdr.open{color:var(--accent)}
+.accord-arrow{font-size:10px;color:var(--muted);transition:transform .2s}
+.accord-hdr.open .accord-arrow{transform:rotate(180deg)}
+.accord-count{font-size:11px;color:var(--muted);font-family:'Crimson Pro',serif;font-weight:400;font-style:italic;margin-left:6px}
+.accord-body{display:none;padding:8px 14px;border-top:1px solid var(--border)}
+.accord-body.open{display:block}
+.bld-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(30,48,72,.4);font-size:13px}
 .bld-row:last-child{border-bottom:none}
 .bld-row-name{color:var(--text)}
 .bld-row-level{
-  font-family:'Cinzel',serif;font-size:12px;font-weight:700;
+  font-family:'Cinzel',serif;font-size:11px;font-weight:700;
   color:var(--accent);background:rgba(125,189,232,.08);
-  border:1px solid rgba(125,189,232,.2);border-radius:4px;
-  padding:1px 8px;
+  border:1px solid rgba(125,189,232,.2);border-radius:4px;padding:1px 7px;
 }
-.empty-state{font-size:13px;color:var(--muted);font-style:italic;text-align:center;padding:20px 0}
+
+/* RIGHT COL */
+.right-col{display:flex;flex-direction:column;gap:16px}
 
 /* BIOMES */
 .biome-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.biome-chip{
-  padding:4px 12px;border-radius:6px;font-family:'Cinzel',serif;font-size:12px;
-  background:rgba(125,189,232,.08);border:1px solid rgba(125,189,232,.2);color:var(--accent);
-}
+.biome-chip{padding:4px 12px;border-radius:6px;font-family:'Cinzel',serif;font-size:12px;background:rgba(125,189,232,.08);border:1px solid rgba(125,189,232,.2);color:var(--accent)}
 .crop-chips{display:flex;flex-wrap:wrap;gap:4px}
-.crop-chip{
-  padding:2px 8px;border-radius:4px;font-size:12px;
-  background:rgba(74,158,106,.1);border:1px solid rgba(74,158,106,.2);color:var(--green);
-}
+.crop-chip{padding:2px 8px;border-radius:4px;font-size:12px;background:rgba(74,158,106,.1);border:1px solid rgba(74,158,106,.2);color:var(--green)}
 .crop-section-label{font-size:11px;color:var(--muted);font-family:'Cinzel',serif;letter-spacing:.3px;margin:8px 0 4px}
 
-/* MEALS */
+/* MEALS & INGS */
 .meal-chips{display:flex;flex-wrap:wrap;gap:6px}
-.meal-chip{
-  padding:4px 12px;border-radius:6px;font-size:13px;
-  background:var(--card);border:1px solid var(--border);color:var(--text);
-}
-.meal-chip.lvl5{border-left:3px solid var(--green)}
-.meal-chip.lvl3{border-left:3px solid var(--gold)}
-.meal-chip.lvl1{border-left:3px solid var(--muted)}
-
-/* INGREDIENTS */
+.meal-chip{padding:4px 12px;border-radius:6px;font-size:13px;background:var(--card);border:1px solid var(--border);color:var(--text)}
 .ing-chips{display:flex;flex-wrap:wrap;gap:4px}
-.ing-chip{
-  padding:2px 8px;border-radius:4px;font-size:12px;
-  background:var(--card);border:1px solid var(--border);color:#b8d0e0;
-}
+.ing-chip{padding:2px 8px;border-radius:4px;font-size:12px;background:var(--card);border:1px solid var(--border);color:#b8d0e0}
 
-/* NO DATA */
-.no-colony{
-  text-align:center;padding:80px 24px;
-}
+.empty-state{font-size:13px;color:var(--muted);font-style:italic;text-align:center;padding:16px 0}
+
+/* NO COLONY */
+.no-colony{text-align:center;padding:80px 24px}
 .no-colony-icon{font-size:56px;margin-bottom:16px}
 .no-colony-title{font-family:'Cinzel',serif;font-size:22px;color:var(--gold);margin-bottom:8px}
 .no-colony-msg{font-size:15px;color:var(--muted);margin-bottom:24px;line-height:1.6}
-.no-colony-btn{
-  display:inline-block;padding:12px 28px;border-radius:8px;
-  font-family:'Cinzel',serif;font-size:14px;font-weight:600;
-  background:var(--accent);color:#0a0e14;text-decoration:none;transition:background .2s;
-}
+.no-colony-btn{display:inline-block;padding:12px 28px;border-radius:8px;font-family:'Cinzel',serif;font-size:14px;font-weight:600;background:var(--accent);color:#0a0e14;text-decoration:none;transition:background .2s}
 .no-colony-btn:hover{background:#9acfee}
 
 .loading{text-align:center;padding:60px;color:var(--muted);font-style:italic;font-size:18px}
-
 footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color:var(--muted);font-size:14px;margin-top:40px}
 
 @media(max-width:800px){
-  .dash-grid{grid-template-columns:1fr}
-  .dash-card.full{grid-column:1}
+  .dash-bottom{grid-template-columns:1fr}
   nav{flex-direction:column;gap:12px}
   .colony-hero{flex-direction:column;align-items:flex-start}
 }
@@ -174,7 +157,7 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
   <div id="app-loading" class="loading">Loading your colony…</div>
 
   <div id="app" style="display:none">
-    <!-- COLONY HERO -->
+
     <div class="colony-hero">
       <div class="colony-hero-left">
         <div class="colony-icon">🏰</div>
@@ -192,57 +175,46 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
       </div>
     </div>
 
-    <!-- DASHBOARD GRID -->
-    <div class="dash-grid">
-
-      <!-- RESEARCH -->
-      <div class="dash-card full">
-        <div class="dash-card-title">
-          🎓 Research Progress
-          <a href="/university">Open Planner →</a>
-        </div>
-        <div class="research-bars" id="research-bars"></div>
-        <div class="res-legend">
-          <div class="res-legend-item"><div class="res-legend-dot" style="background:var(--green)"></div>Done</div>
-          <div class="res-legend-item"><div class="res-legend-dot" style="background:var(--amber)"></div>Materials</div>
-          <div class="res-legend-item"><div class="res-legend-dot" style="background:#3b82f6"></div>Planned</div>
-        </div>
+    <!-- RESEARCH FULL WIDTH -->
+    <div class="dash-card dash-top">
+      <div class="dash-card-title">
+        🎓 Research Progress
+        <a href="/university">Open Planner →</a>
       </div>
+      <div class="research-bars" id="research-bars">
+        <div class="empty-state">Loading…</div>
+      </div>
+      <div class="res-legend">
+        <div class="res-legend-item"><div class="res-legend-dot" style="background:var(--green)"></div>Done</div>
+        <div class="res-legend-item"><div class="res-legend-dot" style="background:var(--amber)"></div>Materials</div>
+        <div class="res-legend-item"><div class="res-legend-dot" style="background:#3b82f6"></div>Planned</div>
+      </div>
+    </div>
 
-      <!-- BUILDINGS -->
+    <!-- BOTTOM: buildings left, rest right -->
+    <div class="dash-bottom">
+
       <div class="dash-card">
         <div class="dash-card-title">
           🏗️ Building Levels
           <a href="/university">Update →</a>
         </div>
-        <div class="bld-list" id="bld-list"></div>
+        <div id="bld-accordion"></div>
       </div>
 
-      <!-- BIOMES & CROPS -->
-      <div class="dash-card">
-        <div class="dash-card-title">
-          🌍 Biomes & Crops
-          <a href="/food">Update →</a>
+      <div class="right-col">
+        <div class="dash-card">
+          <div class="dash-card-title">🌍 Biomes & Crops<a href="/food">Update →</a></div>
+          <div id="biomes-content"></div>
         </div>
-        <div id="biomes-content"></div>
-      </div>
-
-      <!-- PLANNED MEALS -->
-      <div class="dash-card">
-        <div class="dash-card-title">
-          🍖 Planned Meals
-          <a href="/food">Update →</a>
+        <div class="dash-card">
+          <div class="dash-card-title">🧺 Available Ingredients<a href="/food">Update →</a></div>
+          <div id="ings-content"></div>
         </div>
-        <div id="meals-content"></div>
-      </div>
-
-      <!-- INGREDIENTS -->
-      <div class="dash-card">
-        <div class="dash-card-title">
-          🧺 Available Ingredients
-          <a href="/food">Update →</a>
+        <div class="dash-card">
+          <div class="dash-card-title">🍖 Planned Meals<a href="/food">Update →</a></div>
+          <div id="meals-content"></div>
         </div>
-        <div id="ings-content"></div>
       </div>
 
     </div>
@@ -257,25 +229,32 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
 const SUPABASE_URL='https://lihxhwcrlnvsqpfqtggc.supabase.co';
 const SUPABASE_KEY='sb_publishable_OfZ9MzjXjDGime_xNJj7hA_Bi5-EQ8V';
 const H={'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`};
-
 const COLONY_CODE=sessionStorage.getItem('colonyCode')||null;
-const COLONY_NAME=sessionStorage.getItem('colonyName')||null;
-
-// Research tree totals (from DB)
 const TREE_TOTALS={civilian:68,combat:57,technology:77};
+
+const BLDG_CATS=[
+  {cat:'🏛️ Fundamentals',items:['Town Hall',"Builder's Hut",'Residence','Dining Hall','Hospital',"Forester's Hut",'Mine','Quarry','Tavern']},
+  {cat:'🌾 Agriculture',items:["Farmer's Hut","Fisher's Hut",'Apiary',"Cowhand's Hut","Shepherd's Hut","Swineherd's Hut","Chicken Farmer's Hut",'Rabbit Hutch',"Composter's Hut",'Flower Shop','Plantation']},
+  {cat:'⚙️ Craftsmanship',items:['Warehouse',"Courier's Hut",'Sawmill',"Blacksmith's Hut",'Smeltery','Brick Yard',"Stonemason's Hut","Crusher's Hut","Mechanic's Hut","Glassblower's Hut","Dyer's Hut","Fletcher's Hut","Concrete Mixer's Hut","Sifter's Hut",'Bakery',"Chef's Kitchen",'Alchemist Laboratory']},
+  {cat:'📚 Education',items:['University','Library','School']},
+  {cat:'⚔️ Military',items:['Guard Tower','Barracks','Combat Academy','Archery','Gatehouse']},
+  {cat:'🔮 Mystic',items:["Enchanter's Tower",'Graveyard','Mystical Site','Nether Mine']},
+];
 
 async function init(){
   document.getElementById('app-loading').style.display='';
-
   if(!COLONY_CODE){
     document.getElementById('app-loading').style.display='none';
     document.getElementById('no-colony').style.display='';
     return;
   }
-
   try{
-    const res=await fetch(`${SUPABASE_URL}/rest/v1/colony_saves?colony_code=eq.${encodeURIComponent(COLONY_CODE)}&select=*`,{headers:H});
-    const rows=await res.json();
+    const[colonyRes,researchRes]=await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/colony_saves?colony_code=eq.${encodeURIComponent(COLONY_CODE)}&select=*`,{headers:H}),
+      fetch(`${SUPABASE_URL}/rest/v1/research?select=id,tree`,{headers:H}),
+    ]);
+    const rows=await colonyRes.json();
+    const researchRows=await researchRes.json();
     if(!rows||!rows.length){
       document.getElementById('app-loading').style.display='none';
       document.getElementById('no-colony').style.display='';
@@ -283,22 +262,19 @@ async function init(){
     }
     const colony=rows[0];
     const sd=colony.save_data||{};
-
     document.getElementById('app-loading').style.display='none';
     document.getElementById('app').style.display='';
-
-    // Hero
     document.getElementById('colony-name').textContent=colony.colony_name;
     document.getElementById('colony-code').textContent=colony.colony_code;
-    const accessed=colony.last_accessed?new Date(colony.last_accessed).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):'Never';
+    const accessed=colony.last_accessed
+      ?new Date(colony.last_accessed).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})
+      :'Never';
     document.getElementById('colony-accessed').textContent='Last accessed: '+accessed;
-
-    renderResearch(sd.research||{});
+    renderResearch(sd.research||{},researchRows);
     renderBuildings(sd.buildings||{});
-    renderBiomes(sd.biomes||[],sd.ingredients||{});
-    renderMeals(sd.planned_meals||[]);
+    renderBiomes(sd.biomes||[]);
     renderIngredients(sd.ingredients||{});
-
+    renderMeals(sd.planned_meals||[]);
   }catch(e){
     console.error(e);
     document.getElementById('app-loading').style.display='none';
@@ -306,118 +282,100 @@ async function init(){
   }
 }
 
-function renderResearch(research){
-  const trees=['civilian','combat','technology'];
-  const treeLabels={civilian:'🏘️ Civilian',combat:'⚔️ Combat',technology:'⚙️ Technology'};
+function renderResearch(research,researchRows){
+  const treeMap={};
+  researchRows.forEach(r=>{ treeMap[r.id]=r.tree; });
   const counts={civilian:{done:0,materials:0,plan:0},combat:{done:0,materials:0,plan:0},technology:{done:0,materials:0,plan:0}};
-
-  // We don't have research data loaded here so we use counts from save_data
-  // research is keyed by research id, value is 'done'|'materials'|'plan'
-  // We need tree info — fetch it
-  fetch(`${SUPABASE_URL}/rest/v1/research?select=id,tree`,{headers:H})
-    .then(r=>r.json())
-    .then(rows=>{
-      const treeMap={};
-      rows.forEach(r=>treeMap[r.id]=r.tree);
-      Object.entries(research).forEach(([id,status])=>{
-        const tree=treeMap[parseInt(id)];
-        if(tree&&counts[tree]&&status) counts[tree][status]=(counts[tree][status]||0)+1;
-      });
-      const el=document.getElementById('research-bars');
-      el.innerHTML=trees.map(tree=>{
-        const total=TREE_TOTALS[tree];
-        const d=counts[tree].done||0;
-        const m=counts[tree].materials||0;
-        const p=counts[tree].plan||0;
-        const dpct=Math.round(d/total*100);
-        const mpct=Math.round(m/total*100);
-        const ppct=Math.round(p/total*100);
-        return`<div class="res-tree">
-          <span class="res-tree-name">${treeLabels[tree]}</span>
-          <div class="res-bar-wrap">
-            <div class="res-bar-done" style="width:${dpct}%"></div>
-            <div class="res-bar-mat" style="width:${mpct}%"></div>
-            <div class="res-bar-plan" style="width:${ppct}%"></div>
-          </div>
-          <span class="res-counts">${d}/${total} done</span>
-        </div>`;
-      }).join('');
-    });
+  Object.entries(research).forEach(([id,status])=>{
+    const tree=treeMap[parseInt(id)];
+    if(tree&&counts[tree]&&status) counts[tree][status]=(counts[tree][status]||0)+1;
+  });
+  const trees=['civilian','combat','technology'];
+  const labels={civilian:'🏘️ Civilian',combat:'⚔️ Combat',technology:'⚙️ Technology'};
+  document.getElementById('research-bars').innerHTML=trees.map(tree=>{
+    const total=TREE_TOTALS[tree];
+    const d=counts[tree].done||0,m=counts[tree].materials||0,p=counts[tree].plan||0;
+    const dp=Math.round(d/total*100),mp=Math.round(m/total*100),pp=Math.round(p/total*100);
+    return`<div class="res-tree">
+      <span class="res-tree-name">${labels[tree]}</span>
+      <div class="res-bar-wrap">
+        <div class="res-bar-done" style="width:${dp}%"></div>
+        <div class="res-bar-mat" style="width:${mp}%"></div>
+        <div class="res-bar-plan" style="width:${pp}%"></div>
+      </div>
+      <span class="res-counts">${d}/${total} done</span>
+    </div>`;
+  }).join('');
 }
 
 function renderBuildings(buildings){
-  const el=document.getElementById('bld-list');
-  const entries=Object.entries(buildings).filter(([,lvl])=>lvl>0).sort((a,b)=>b[1]-a[1]);
-  if(!entries.length){
+  const el=document.getElementById('bld-accordion');
+  const hasAny=Object.values(buildings).some(v=>v>0);
+  if(!hasAny){
     el.innerHTML='<div class="empty-state">No building levels set yet.<br>Go to University → Buildings tab.</div>';
     return;
   }
-  el.innerHTML=entries.map(([name,lvl])=>`
-    <div class="bld-row">
-      <span class="bld-row-name">${name}</span>
-      <span class="bld-row-level">Level ${lvl}</span>
-    </div>
-  `).join('');
+  el.innerHTML=BLDG_CATS.map((cat,ci)=>{
+    const blds=cat.items.map(n=>({name:n,level:buildings[n]||0})).filter(b=>b.level>0).sort((a,b)=>b.level-a.level);
+    if(!blds.length) return '';
+    const id=`accord-${ci}`;
+    return`<div class="accord">
+      <div class="accord-hdr" id="hdr-${id}" onclick="toggleAccord('${id}')">
+        <span>${cat.cat}<span class="accord-count">(${blds.length})</span></span>
+        <span class="accord-arrow" id="arrow-${id}">▼</span>
+      </div>
+      <div class="accord-body" id="${id}">
+        ${blds.map(b=>`<div class="bld-row"><span class="bld-row-name">${b.name}</span><span class="bld-row-level">Level ${b.level}</span></div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
 }
 
-async function renderBiomes(biomeNames,ingredients){
-  const el=document.getElementById('biomes-content');
-  if(!biomeNames.length){
-    el.innerHTML='<div class="empty-state">No biomes selected yet.<br>Go to the Food Planner.</div>';
-    return;
-  }
+function toggleAccord(id){
+  const body=document.getElementById(id);
+  const hdr=document.getElementById('hdr-'+id);
+  const arrow=document.getElementById('arrow-'+id);
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);
+}
 
-  // Fetch biome display names and crops
+async function renderBiomes(biomeNames){
+  const el=document.getElementById('biomes-content');
+  if(!biomeNames.length){el.innerHTML='<div class="empty-state">No biomes selected yet.<br>Go to the Food Planner.</div>';return;}
   const[bRes,bcRes]=await Promise.all([
     fetch(`${SUPABASE_URL}/rest/v1/biomes?select=*`,{headers:H}),
     fetch(`${SUPABASE_URL}/rest/v1/biome_crops?select=*`,{headers:H}),
   ]);
   const biomes=await bRes.json();
   const biomeCrops=await bcRes.json();
-  const biomeById=Object.fromEntries(biomes.map(b=>[b.name,b]));
-
+  const biomeByName=Object.fromEntries(biomes.map(b=>[b.name,b]));
   let html='<div class="biome-chips">';
-  biomeNames.forEach(name=>{
-    const b=biomeById[name];
-    if(b) html+=`<span class="biome-chip">${b.display_name}</span>`;
-  });
+  biomeNames.forEach(n=>{const b=biomeByName[n];if(b)html+=`<span class="biome-chip">${b.display_name}</span>`;});
   html+='</div>';
-
-  // Crops from selected biomes
-  const selectedCrops=new Set();
+  const crops=new Set();
   biomeCrops.forEach(bc=>{
     const b=biomes.find(x=>x.id===bc.biome_id);
-    if(b&&(biomeNames.includes(b.name)||b.name==='all')) selectedCrops.add(bc.crop);
+    if(b&&(biomeNames.includes(b.name)||b.name==='all'))crops.add(bc.crop);
   });
-
-  if(selectedCrops.size){
+  if(crops.size){
     html+=`<div class="crop-section-label">Available Crops</div><div class="crop-chips">`;
-    [...selectedCrops].sort().forEach(c=>html+=`<span class="crop-chip">${c}</span>`);
+    [...crops].sort().forEach(c=>html+=`<span class="crop-chip">${c}</span>`);
     html+='</div>';
   }
-
   el.innerHTML=html;
+}
+
+function renderIngredients(ingredients){
+  const always=['Large Water Bottle','Bowl','Stick'];
+  const checked=Object.entries(ingredients).filter(([,v])=>v).map(([k])=>k);
+  const all=[...new Set([...always,...checked])].sort();
+  document.getElementById('ings-content').innerHTML='<div class="ing-chips">'+all.map(i=>`<span class="ing-chip">${i}</span>`).join('')+'</div>';
 }
 
 function renderMeals(meals){
   const el=document.getElementById('meals-content');
-  if(!meals.length){
-    el.innerHTML='<div class="empty-state">No meals planned yet.<br>Go to the Food Planner.</div>';
-    return;
-  }
-  el.innerHTML='<div class="meal-chips">'+meals.map(name=>`<span class="meal-chip">${name}</span>`).join('')+'</div>';
-}
-
-function renderIngredients(ingredients){
-  const el=document.getElementById('ings-content');
-  const checked=Object.entries(ingredients).filter(([,v])=>v).map(([k])=>k);
-  const always=['Large Water Bottle','Bowl','Stick'];
-  const all=[...new Set([...always,...checked])].sort();
-  if(!all.length){
-    el.innerHTML='<div class="empty-state">No ingredients set.</div>';
-    return;
-  }
-  el.innerHTML='<div class="ing-chips">'+all.map(i=>`<span class="ing-chip">${i}</span>`).join('')+'</div>';
+  if(!meals.length){el.innerHTML='<div class="empty-state">No meals planned yet.<br>Go to the Food Planner.</div>';return;}
+  el.innerHTML='<div class="meal-chips">'+meals.map(n=>`<span class="meal-chip">${n}</span>`).join('')+'</div>';
 }
 
 init();
