@@ -99,6 +99,12 @@ nav{padding:20px 0;display:flex;align-items:center;justify-content:space-between
   border:1px solid rgba(125,189,232,.2);border-radius:4px;padding:1px 7px;
 }
 
+/* MATERIALS CARD */
+.mat-totals{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:16px}
+.mat-ichip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:var(--card);border:1px solid var(--border);border-radius:7px;font-size:13px}
+.mat-ichip .mat-cnt{font-weight:800;color:var(--accent)}
+.mat-section-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-family:'Cinzel',serif;margin-bottom:8px}
+
 /* RIGHT COL */
 .right-col{display:flex;flex-direction:column;gap:16px}
 
@@ -175,7 +181,7 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
       </div>
     </div>
 
-    <!-- RESEARCH FULL WIDTH -->
+    <!-- RESEARCH PROGRESS — FULL WIDTH -->
     <div class="dash-card dash-top">
       <div class="dash-card-title">
         🎓 Research Progress
@@ -188,6 +194,17 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
         <div class="res-legend-item"><div class="res-legend-dot" style="background:var(--green)"></div>Done</div>
         <div class="res-legend-item"><div class="res-legend-dot" style="background:var(--amber)"></div>Materials</div>
         <div class="res-legend-item"><div class="res-legend-dot" style="background:#3b82f6"></div>Planned</div>
+      </div>
+    </div>
+
+    <!-- MATERIALS NEEDED — FULL WIDTH -->
+    <div class="dash-card dash-top" id="mat-card">
+      <div class="dash-card-title">
+        📦 Materials Needed
+        <a href="/university">Update in Planner →</a>
+      </div>
+      <div id="mat-content">
+        <div class="empty-state">No research marked as Materials yet.<br>Go to University → mark research as 📦 Materials.</div>
       </div>
     </div>
 
@@ -249,12 +266,15 @@ async function init(){
     return;
   }
   try{
-    const[colonyRes,researchRes]=await Promise.all([
+    const[colonyRes,researchRes,costsRes]=await Promise.all([
       fetch(`${SUPABASE_URL}/rest/v1/colony_saves?colony_code=eq.${encodeURIComponent(COLONY_CODE)}&select=*`,{headers:H}),
-      fetch(`${SUPABASE_URL}/rest/v1/research?select=id,tree`,{headers:H}),
+      fetch(`${SUPABASE_URL}/rest/v1/research?select=id,name,tree,uni_level`,{headers:H}),
+      fetch(`${SUPABASE_URL}/rest/v1/research_costs?select=*`,{headers:H}),
     ]);
     const rows=await colonyRes.json();
     const researchRows=await researchRes.json();
+    const costRows=await costsRes.json();
+
     if(!rows||!rows.length){
       document.getElementById('app-loading').style.display='none';
       document.getElementById('no-colony').style.display='';
@@ -270,7 +290,9 @@ async function init(){
       ?new Date(colony.last_accessed).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})
       :'Never';
     document.getElementById('colony-accessed').textContent='Last accessed: '+accessed;
+
     renderResearch(sd.research||{},researchRows);
+    renderMaterials(sd.research||{},researchRows,costRows);
     renderBuildings(sd.buildings||{});
     renderBiomes(sd.biomes||[]);
     renderIngredients(sd.ingredients||{});
@@ -288,7 +310,6 @@ function renderResearch(research,researchRows){
   const counts={civilian:{done:0,materials:0,plan:0},combat:{done:0,materials:0,plan:0},technology:{done:0,materials:0,plan:0}};
   Object.entries(research).forEach(([id,status])=>{
     const tree=treeMap[parseInt(id)];
-    // 'finished' in save_data maps to 'done' in counts
     const key=status==='finished'?'done':status;
     if(tree&&counts[tree]&&key) counts[tree][key]=(counts[tree][key]||0)+1;
   });
@@ -308,6 +329,81 @@ function renderResearch(research,researchRows){
       <span class="res-counts">${d}/${total} done</span>
     </div>`;
   }).join('');
+}
+
+function renderMaterials(research,researchRows,costRows){
+  const el=document.getElementById('mat-content');
+  const resById=Object.fromEntries(researchRows.map(r=>[r.id,r]));
+
+  // Build costs lookup by research_id
+  const costsByRes={};
+  costRows.forEach(c=>{
+    if(!costsByRes[c.research_id])costsByRes[c.research_id]=[];
+    costsByRes[c.research_id].push(c);
+  });
+
+  // Filter to only "materials" status entries that exist in research table
+  const matIds=Object.entries(research)
+    .filter(([,s])=>s==='materials')
+    .map(([id])=>parseInt(id))
+    .filter(id=>resById[id]);
+
+  if(!matIds.length){
+    el.innerHTML='<div class="empty-state">No research marked as Materials yet.<br>Go to University → mark research as 📦 Materials.</div>';
+    return;
+  }
+
+  // Aggregate totals across all materials research
+  const totals={};
+  matIds.forEach(id=>{
+    (costsByRes[id]||[]).forEach(c=>{totals[c.item]=(totals[c.item]||0)+c.quantity;});
+  });
+
+  // Build HTML
+  let html='';
+
+  // Totals section
+  html+=`<div class="mat-section-lbl">Total Items Needed</div>`;
+  html+=`<div class="mat-totals">`;
+  if(Object.keys(totals).length){
+    Object.entries(totals).sort((a,b)=>b[1]-a[1]).forEach(([item,qty])=>{
+      html+=`<span class="mat-ichip"><span class="mat-cnt">×${qty.toLocaleString()}</span>${item}</span>`;
+    });
+  }else{
+    html+='<span style="font-size:13px;color:var(--muted);font-style:italic">No items required for these researches</span>';
+  }
+  html+=`</div>`;
+
+  // Per-research breakdown
+  html+=`<div class="mat-section-lbl" style="margin-top:4px">By Research — click to expand</div>`;
+  matIds.forEach(id=>{
+    const r=resById[id];
+    const rc=costsByRes[id]||[];
+    html+=`<div class="accord" style="margin-bottom:6px">
+      <div class="accord-hdr" id="mat-hdr-${id}" onclick="toggleMatAccord(${id})">
+        <span>${r.name}<span class="accord-count">(${r.tree} · Uni ${r.uni_level})</span></span>
+        <span class="accord-arrow" id="mat-arrow-${id}">▼</span>
+      </div>
+      <div class="accord-body" id="mat-body-${id}">
+        <div style="display:flex;flex-wrap:wrap;gap:4px;padding:4px 0">
+          ${rc.length
+            ? rc.map(c=>`<span class="mat-ichip"><span class="mat-cnt">×${c.quantity.toLocaleString()}</span>${c.item}</span>`).join('')
+            : '<span style="font-size:13px;color:var(--muted);font-style:italic">No items required</span>'
+          }
+        </div>
+      </div>
+    </div>`;
+  });
+
+  el.innerHTML=html;
+}
+
+function toggleMatAccord(id){
+  const body=document.getElementById('mat-body-'+id);
+  const hdr=document.getElementById('mat-hdr-'+id);
+  const arrow=document.getElementById('mat-arrow-'+id);
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);
 }
 
 function renderBuildings(buildings){
